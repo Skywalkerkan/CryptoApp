@@ -13,6 +13,7 @@ class DetailViewController: UIViewController {
     
     var singleCoin: Coin?
     var isStarred: Bool = false
+    var allValues = [Float]()
     
     let topNavigationView: UIView = {
         let view = UIView()
@@ -81,7 +82,6 @@ class DetailViewController: UIViewController {
         navigationController.modalPresentationStyle = .pageSheet
         present(navigationController, animated: true, completion: nil)
     }
-
     
     let infoView: UIView = {
        let view = UIView()
@@ -186,7 +186,7 @@ class DetailViewController: UIViewController {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
-        label.text = "24h High"
+        label.text = "MarketCap"
         label.textColor = .gray
         return label
     }()
@@ -222,49 +222,66 @@ class DetailViewController: UIViewController {
     var lineChartView: LineChartView = {
        let view = LineChartView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
         return view
     }()
     
-    let backView: UIView = {
+    let candleCharView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
+    lazy var lineChartButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setBackgroundImage(UIImage(systemName: "chart.xyaxis.line")?.withRenderingMode(.alwaysOriginal).withTintColor(.white), for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+        button.addTarget(self, action: #selector(lineChartClicked), for: .touchUpInside)
+        return button
+    }()
     
-
-
-  /*  override func loadView() {
-           let webConfiguration = WKWebViewConfiguration()
-           webView = WKWebView(frame: .zero, configuration: webConfiguration)
-           webView.uiDelegate = self
-           view = webView
-       }*/
+    @objc func lineChartClicked(){
+        setupLineChartView(dataValues: allValues)
+        candleCharView.isHidden = true
+        lineChartView.isHidden = false
+    }
+    
+    lazy var candleChartButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setBackgroundImage(UIImage(systemName: "chart.bar.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.white), for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+        button.addTarget(self, action: #selector(candleChartClicked), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc func candleChartClicked(){
+        lineChartView.isHidden = true
+        candleCharView.isHidden = false
+        setupCandleChart(data: allValues)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         guard let dataStrings = singleCoin?.sparkline else { return }
         let dataValues = dataStrings.compactMap { Float($0) }
-        print(dataValues)
-        view.backgroundColor = UIColor(red: 38/255, green: 41/255, blue: 48/255, alpha: 1)
 
+        allValues = dataValues
+        
+        view.backgroundColor = UIColor(red: 38/255, green: 41/255, blue: 48/255, alpha: 1)
 
         setDetails()
         setupViews()
         fetchCoins()
         
-        
-      /*  view.addSubview(backView)
-        backView.backgroundColor = .gray
-        backView.backgroundColor = .black
-          
-        backView.topAnchor.constraint(equalTo: rightStackView.bottomAnchor, constant: 16).isActive = true
-        backView.heightAnchor.constraint(equalToConstant: 330).isActive = true
-        backView.widthAnchor.constraint(equalToConstant: 400).isActive = true
-          
-        setupCandleChart(data: dataValues)*/
+       // setupLineChartView(dataValues: dataValues)
+ 
+        setupCandleChart(data: dataValues)
+    }
     
+    func setupLineChartView(dataValues: [Float]){
         let maxFloat = dataValues.max() ?? 0
         let minFloat = dataValues.min() ?? 0
 
@@ -277,20 +294,15 @@ class DetailViewController: UIViewController {
             values.append(value)
         }
 
-        print(values) // 5 eşit aralıklı değer
-
-
         view.backgroundColor = UIColor(red: 38/255, green: 41/255, blue: 48/255, alpha: 1)
 
-
-        
         let startValue = maxFloat
         let endValue = minFloat
-        let stepcik = (startValue - endValue) / 4 // 5 adet değer olduğu için 4 adet aralık var
+        let averageValue = (startValue - endValue) / 4
 
         var labelOuter = UILabel()
         for i in 0...4 {
-            let value = startValue - stepcik * Float(i)
+            let value = startValue - averageValue * Float(i)
             let label = UILabel()
             label.text = String(format: "%.2f", value)
             label.font = UIFont.systemFont(ofSize: 12)
@@ -302,20 +314,18 @@ class DetailViewController: UIViewController {
             NSLayoutConstraint.activate([
                 label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
                 label.heightAnchor.constraint(equalToConstant: 12),
-                label.topAnchor.constraint(equalTo: rightStackView.bottomAnchor, constant: CGFloat(i) * 80 + 40)
+                label.topAnchor.constraint(equalTo: lineChartButton.bottomAnchor, constant: CGFloat(i) * 80 + 16)
             ])
             labelOuter = label
         }
         
         view.addSubview(lineChartView)
-
-        lineChartView.topAnchor.constraint(equalTo: rightStackView.bottomAnchor, constant: 40).isActive = true
+        lineChartView.topAnchor.constraint(equalTo: lineChartButton.bottomAnchor, constant: 16).isActive = true
         lineChartView.heightAnchor.constraint(equalToConstant: 330).isActive = true
         lineChartView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         lineChartView.trailingAnchor.constraint(equalTo: labelOuter.leadingAnchor, constant: -5).isActive = true
-                
         lineChartView.data = dataValues
-    
+
     }
     
     func setDetails(){
@@ -455,7 +465,6 @@ class DetailViewController: UIViewController {
         priceChangeStackView.addArrangedSubview(priceLabelUsd)
         priceChangeStackView.addArrangedSubview(changeLabel)
         
-        
         view.addSubview(rightStackView)
         rightStackView.topAnchor.constraint(equalTo: topNavigationView.bottomAnchor, constant: 16).isActive = true
         rightStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
@@ -473,9 +482,21 @@ class DetailViewController: UIViewController {
         leftStackView.addArrangedSubview(low24hLabel)
         leftStackView.addArrangedSubview(low24hValueLabel)
         leftStackView.setCustomSpacing(8, after: high24hValueLabel)
+        
+        view.addSubview(lineChartButton)
+        lineChartButton.topAnchor.constraint(equalTo: rightStackView.bottomAnchor, constant: 16).isActive = true
+        lineChartButton.trailingAnchor.constraint(equalTo: rightStackView.trailingAnchor, constant: 0).isActive = true
+        lineChartButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        lineChartButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        
+        view.addSubview(candleChartButton)
+        candleChartButton.topAnchor.constraint(equalTo: rightStackView.bottomAnchor, constant: 16).isActive = true
+        candleChartButton.trailingAnchor.constraint(equalTo: lineChartButton.leadingAnchor, constant: -16).isActive = true
+        candleChartButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        candleChartButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+
     }
-    
-    
+
     func calculatePositions(data: [Float], viewHeight: CGFloat) -> [CGFloat] {
         let maxValue = CGFloat(data.max() ?? 0)
         let minValue = CGFloat(data.min() ?? 0)
@@ -491,8 +512,6 @@ class DetailViewController: UIViewController {
         
         return positions
     }
-
-    
     
     func calculatePositionsAndHeights(data: [Float], viewHeight: CGFloat) -> [(position: CGFloat, height: CGFloat)] {
         let maxValue = CGFloat(data.max() ?? 0)
@@ -513,7 +532,7 @@ class DetailViewController: UIViewController {
                 let relativeHeight = valueDifference / totalRange
                 height = relativeHeight * viewHeight
             } else {
-                height = 0 // Son eleman, yani en üstteki eleman
+                height = 0 // son eleman, yani en üstteki eleman
             }
             
             positionsAndHeights.append((position: position, height: height))
@@ -522,23 +541,55 @@ class DetailViewController: UIViewController {
         return positionsAndHeights
     }
     
-    
     var primaryPercent: Float = 0.0
 
-    
     private func setupCandleChart(data: [Float]){
-        print(data)
+
+        let maxFloat = data.max() ?? 0
+        let minFloat = data.min() ?? 0
+
+        let range = maxFloat - minFloat
+        let step = range / 4
+
+        var values: [Float] = []
+        for i in 0...4 {
+            let value = minFloat + step * Float(i)
+            values.append(value)
+        }
+
+        view.backgroundColor = UIColor(red: 38/255, green: 41/255, blue: 48/255, alpha: 1)
+
+        let startValue = maxFloat
+        let endValue = minFloat
+        let averageValue = (startValue - endValue) / 4
+
+        var labelOuter = UILabel()
+        for i in 0...4 {
+            let value = startValue - averageValue * Float(i)
+            let label = UILabel()
+            label.text = String(format: "%.2f", value)
+            label.font = UIFont.systemFont(ofSize: 12)
+            view.addSubview(label)
+            label.backgroundColor = .clear
+            label.textAlignment = .right
+            label.textColor = .lightGray
+            label.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+                label.heightAnchor.constraint(equalToConstant: 12),
+                label.topAnchor.constraint(equalTo: lineChartButton.bottomAnchor, constant: CGFloat(i) * 80 + 16)
+            ])
+            labelOuter = label
+        }
+  
+        view.addSubview(candleCharView)
+        candleCharView.topAnchor.constraint(equalTo: lineChartButton.bottomAnchor, constant: 16).isActive = true
+        candleCharView.heightAnchor.constraint(equalToConstant: 330).isActive = true
+        candleCharView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        candleCharView.trailingAnchor.constraint(equalTo: labelOuter.leadingAnchor, constant: -5).isActive = true
         
         let maxValue = data.max() ?? 0
         let minValue = data.min() ?? 0
-        
-        let percentageDifference = (maxValue - minValue) / minValue * 100
-        
-        
-        
-        // CandlestickView oluşturma
-
-        
         
         var primaryView = UIView()
         
@@ -552,41 +603,22 @@ class DetailViewController: UIViewController {
         
         let positionsAndHeights = calculatePositionsAndHeights(data: data, viewHeight: 300)
         var heights = [Int]()
-      //  print("Positions and Heights:")
         for (index, item) in positionsAndHeights.enumerated() {
-            let absoluteHeight = Int(abs(item.height)) // Yüksekliğin mutlak değeri alınıyor
+            let absoluteHeight = Int(abs(item.height))
                print("Item \(index + 1): position \(item.position), height \(absoluteHeight)")
                 
                heights.append(absoluteHeight)
         }
         
         
-        for i in 0...data.count-2 { // İki label oluşturacağız
+        for i in 0...data.count-2 {
             let candleView = UIView()
             candleView.translatesAutoresizingMaskIntoConstraints = false
-            candleView.backgroundColor = .purple
-            
-            
             let percentDiff = (data[i + 1] - data[i]) / data[i] * 100
-            let differenceHepsi = data[i] / (maxValue + minValue)
             
             let candleWidth: CGFloat = (view.frame.size.width - 125)/35
-          //  print(candleWidth)
-            
-            let ikisininOran = 300 * (1-differenceHepsi)
-           // let ikisininOran = 300/((maxValue+minValue)/data[i])
-           // print(ikisininOran)
             let position = 300 - (calculatePositions(data: data, viewHeight: 300).first ?? 0)
-           // let ikisininOran = 300 - positions[i]
-            //print(ikisininOran)
-           // print(differenceHepsi)
-            
-           
-            let difference = data[i+1] - data[i]
-            
-            let candleHeight: CGFloat = abs(CGFloat(percentDiff * constantHeight).rounded())
-
-            backView.addSubview(candleView)
+            candleCharView.addSubview(candleView)
             if heights[i] == 0{
                 heights[i] = 1
             }
@@ -599,62 +631,50 @@ class DetailViewController: UIViewController {
 
             if i == 0{
                 NSLayoutConstraint.activate([
-                    candleView.heightAnchor.constraint(equalToConstant: CGFloat(heights[i])), // Yükseklik
+                    candleView.heightAnchor.constraint(equalToConstant: CGFloat(heights[i])),
                     candleView.widthAnchor.constraint(equalToConstant: candleWidth),
-                    candleView.topAnchor.constraint(equalTo: backView.topAnchor, constant: CGFloat(position)),
-                    candleView.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 5), // Sol kenar
+                    candleView.topAnchor.constraint(equalTo: candleCharView.topAnchor, constant: CGFloat(position)),
+                    candleView.leadingAnchor.constraint(equalTo: candleCharView.leadingAnchor, constant: 5),
                 ])
               
             }else{
                 if percentDiff > 0 && primaryPercent > 0{
                     NSLayoutConstraint.activate([
-                        candleView.heightAnchor.constraint(equalToConstant: CGFloat(heights[i])), // Yükseklik
+                        candleView.heightAnchor.constraint(equalToConstant: CGFloat(heights[i])),
                         candleView.widthAnchor.constraint(equalToConstant: candleWidth),
                         candleView.bottomAnchor.constraint(equalTo: primaryView.topAnchor),
-                        candleView.leadingAnchor.constraint(equalTo: primaryView.trailingAnchor, constant: 5), // Sol kenar
+                        candleView.leadingAnchor.constraint(equalTo: primaryView.trailingAnchor, constant: 5),
                     ])
                 }else if percentDiff < 0 && primaryPercent < 0{
                     NSLayoutConstraint.activate([
-                        candleView.heightAnchor.constraint(equalToConstant: CGFloat(heights[i])), // Yükseklik
+                        candleView.heightAnchor.constraint(equalToConstant: CGFloat(heights[i])),
                         candleView.widthAnchor.constraint(equalToConstant: candleWidth),
                         candleView.topAnchor.constraint(equalTo: primaryView.bottomAnchor),
-                        candleView.leadingAnchor.constraint(equalTo: primaryView.trailingAnchor, constant: 5), // Sol kenar
+                        candleView.leadingAnchor.constraint(equalTo: primaryView.trailingAnchor, constant: 5),
                     ])
                 }
                 else if percentDiff > 0 && primaryPercent < 0{
                     NSLayoutConstraint.activate([
-                        candleView.heightAnchor.constraint(equalToConstant: CGFloat(heights[i])), // Yükseklik
+                        candleView.heightAnchor.constraint(equalToConstant: CGFloat(heights[i])),
                         candleView.widthAnchor.constraint(equalToConstant: candleWidth),
                         candleView.bottomAnchor.constraint(equalTo: primaryView.bottomAnchor),
-                        candleView.leadingAnchor.constraint(equalTo: primaryView.trailingAnchor, constant: 5), // Sol kenar
+                        candleView.leadingAnchor.constraint(equalTo: primaryView.trailingAnchor, constant: 5),
                     ])
                 }
                 else if percentDiff < 0 && primaryPercent > 0{
                     NSLayoutConstraint.activate([
-                        candleView.heightAnchor.constraint(equalToConstant: CGFloat(heights[i])), // Yükseklik
+                        candleView.heightAnchor.constraint(equalToConstant: CGFloat(heights[i])),
                         candleView.widthAnchor.constraint(equalToConstant: candleWidth),
                         candleView.topAnchor.constraint(equalTo: primaryView.topAnchor),
-                        candleView.leadingAnchor.constraint(equalTo: primaryView.trailingAnchor, constant: 5), // Sol kenar
+                        candleView.leadingAnchor.constraint(equalTo: primaryView.trailingAnchor, constant: 5),
                     ])
                 }
-                
-               
             }
             primaryPercent = percentDiff
             primaryView = candleView
         }
-
-        
-        
-        
-        
-
-        // CandlestickView'i eklemek
     }
-
-
 }
-
 
 
 class LineChartView: UIView {
@@ -703,23 +723,11 @@ class LineChartView: UIView {
                 linePath.addLine(to: CGPoint(x: x, y: y))
             }
             
-            // x değerlerini eksenin altına yerleştir
-           /* let xValueLabel = UILabel()
-            xValueLabel.text = "\(index)" // veya burada göstermek istediğiniz başka bir değer olabilir
-            xValueLabel.font = UIFont.systemFont(ofSize: 10)
-            xValueLabel.sizeToFit()
-            xValueLabel.center = CGPoint(x: x, y: rect.height + 5) // 5: ekstra bir boşluk
-            addSubview(xValueLabel)*/
         }
-        
-        // Çizgiyi çiz
+
         linePath.stroke()
-        
-        // Alt kısmı doldur
-        linePath.addLine(to: CGPoint(x: rect.width, y: height)) // Alt kenarı tamamla
-        linePath.addLine(to: CGPoint(x: 0, y: height)) // Sol alt köşeye dön
-        
-        // Doldur
+        linePath.addLine(to: CGPoint(x: rect.width, y: height))
+        linePath.addLine(to: CGPoint(x: 0, y: height))
         UIColor(red: 255/255, green: 206/255, blue: 47/255, alpha: 0.5).setFill()
         linePath.fill()
     }
