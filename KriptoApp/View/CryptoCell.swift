@@ -131,7 +131,8 @@ class CryptoCell: UICollectionViewCell {
         guard let coin = coin else{return}
         
         cryptoSymbolLabel.text = coin.symbol
-        dayVolumeLabel.text = formatVolume(coin.the24HVolume)
+       // dayVolumeLabel.text = formatVolume(coin.the24HVolume)
+        dayVolumeLabel.text = coin.the24HVolume?.formatVolume()
         
         guard let change = coin.change, let changeValue = Float(change) else { return }
 
@@ -154,24 +155,4 @@ class CryptoCell: UICollectionViewCell {
         
     }
     
-    
-    func formatVolume(_ volume: String?) -> String {
-        guard let volumeStr = volume, let volumeDouble = Double(volumeStr) else {
-            return "N/A"
-        }
-        
-        let absVolume = abs(volumeDouble)
-        let sign = (volumeDouble < 0) ? "-" : ""
-        
-        switch absVolume {
-        case 0..<1_000_000:
-            return "\(sign)\(volumeDouble)"
-        case 1_000_000..<1_000_000_000:
-            let millionVolume = volumeDouble / 1_000_000
-            return "\(sign)\(String(format: "%.2f", millionVolume))M"
-        default:
-            let billionVolume = volumeDouble / 1_000_000_000
-            return "\(sign)\(String(format: "%.2f", billionVolume))B"
-        }
-    }
 }

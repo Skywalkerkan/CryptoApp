@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DE216B7A2BE7B6A5008A17F2 /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE216B792BE7B6A5008A17F2 /* AppColors.swift */; };
+		DE216B7D2BE7BE0E008A17F2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE216B7C2BE7BE0E008A17F2 /* Extensions.swift */; };
 		DE95A0512BE655E300F59BF1 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE95A0502BE655E300F59BF1 /* CategoryCell.swift */; };
 		DE95A0542BE6660400F59BF1 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE95A0532BE6660400F59BF1 /* Category.swift */; };
 		DE9EF7A42BE78A1800685BEC /* HeaderReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE9EF7A32BE78A1800685BEC /* HeaderReusableView.swift */; };
@@ -32,6 +34,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DE216B792BE7B6A5008A17F2 /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
+		DE216B7C2BE7BE0E008A17F2 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		DE95A0502BE655E300F59BF1 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		DE95A0532BE6660400F59BF1 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		DE9EF7A32BE78A1800685BEC /* HeaderReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderReusableView.swift; sourceTree = "<group>"; };
@@ -69,10 +73,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DE216B7B2BE7BDFD008A17F2 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				DE216B7C2BE7BE0E008A17F2 /* Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		DE95A0522BE665FB00F59BF1 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
 				DE95A0532BE6660400F59BF1 /* Category.swift */,
+				DE216B792BE7B6A5008A17F2 /* AppColors.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -96,6 +109,7 @@
 		DEAB7D172BE2DB800023353A /* KriptoApp */ = {
 			isa = PBXGroup;
 			children = (
+				DE216B7B2BE7BDFD008A17F2 /* Extensions */,
 				DE95A0522BE665FB00F59BF1 /* Helper */,
 				DEAB7D432BE2E3F30023353A /* Constants */,
 				DEAB7D322BE2E0A80023353A /* NetworkManager */,
@@ -241,6 +255,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DEAB7D362BE2E10C0023353A /* Crypto.swift in Sources */,
+				DE216B7D2BE7BE0E008A17F2 /* Extensions.swift in Sources */,
 				DEAB7D232BE2DB800023353A /* KriptoApp.xcdatamodeld in Sources */,
 				DEAB7D472BE2E4560023353A /* Router.swift in Sources */,
 				DE95A0512BE655E300F59BF1 /* CategoryCell.swift in Sources */,
@@ -253,6 +268,7 @@
 				DE9EF7A42BE78A1800685BEC /* HeaderReusableView.swift in Sources */,
 				DEAB7D192BE2DB800023353A /* AppDelegate.swift in Sources */,
 				DE95A0542BE6660400F59BF1 /* Category.swift in Sources */,
+				DE216B7A2BE7B6A5008A17F2 /* AppColors.swift in Sources */,
 				DEAB7D1B2BE2DB800023353A /* SceneDelegate.swift in Sources */,
 				DEAB7D382BE2E1BA0023353A /* CyptoLogic.swift in Sources */,
 				DEAB7D452BE2E3FC0023353A /* Constants.swift in Sources */,

@@ -1,11 +1,11 @@
+
+
 import UIKit
+import CoreData
 
 class MainViewController: UIViewController, UIScrollViewDelegate {
     
-
-    
    // var lineChartView: LineChartView!
-    
     
     var collectionViewCrypto: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -82,12 +82,12 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     
     
     var cryptoResult: CryptoResult?
+    var favCryptos = [Coin]()
+    var isFavActive: Bool = false
     var categories = ["Favorites", "Hot", "Gainers", "Losers", "24h Volume", "Market Cap"]
-    
+    var coinIDs = [String]()
     var selectedCategoryIndex: IndexPath? = [0, 1]
     
-    
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -108,22 +108,41 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
                     self.collectionViewCrypto.reloadData()
                 }
             case .failure(let error):
-                print("error")
+                print(error.localizedDescription)
             }
-            
         }
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        coinIDs.removeAll()
+        favCryptos.removeAll()
+        fetchCoins()
+        for coinID in coinIDs {
+            let filteredCoins = cryptoResult?.data.coins.filter { coin in
+                if let coinUUID = coin.uuid, coinUUID == coinID {
+                    return true
+                } else {
+                    return false
+                }
+            } ?? []
+            
+            favCryptos.append(contentsOf: filteredCoins)
+        }
+        collectionViewCrypto.reloadData()
+  
     }
     
     @objc func receiveNotification(_ notification: Notification) {
            if let chosenCategory = notification.object as? String {
-               print("Alınan String: \(chosenCategory)")
-               
                guard let category = Category(rawValue: chosenCategory) else {
                    return
                }
+               if chosenCategory == "Favorites"{
+                   isFavActive = true
+               }else{
+                   isFavActive = false
+               }
                sortCryptos(cryptoResult: cryptoResult, category: category)
-                        
            }
        }
     
@@ -183,35 +202,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
 
     }
     
-   // let initialYPosition = collectionView.frame.height + 20
-
-    
     var lastContentOffset: CGFloat = 0
-    
- /*   func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offsetY = scrollView.contentOffset.y // CollectionView'in dikey kaydırma konumu
-        
-        // UIView'in y dikey konumunu CollectionView'in kaydırma değerine bağlı olarak güncelleme
-      //  let newCenterY = offsetY + 150 // 150, başlangıç yüksekliğine eklemek istediğiniz bir değerdir
-     //   balanceView.center.y = -newCenterY
-        
-        if scrollView == collectionViewCrypto {
-            collectionViewCrypto.contentOffset = scrollView.contentOffset
-        }
-        let delta = scrollView.contentOffset.y
-        balanceView.transform = CGAffineTransform(translationX: 0, y: -delta)
-        collectionViewCrypto.transform = CGAffineTransform(translationX: 0, y: -delta)
-        collectionViewCategory.transform = CGAffineTransform(translationX: 0, y: -delta)
-        lastContentOffset = scrollView.contentOffset.x
-        
-     //   genderView.transform = CGAffineTransform(translationX: -delta, y: 0)
-        
-       // outerBusView.transform = CGAffineTransform(translationX: -delta, y: 0)
-        
-    }*/
-
-   
-
 
 }
 
@@ -224,16 +215,23 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         switch collectionView{
         case collectionViewCrypto:
             let destinationVC = DetailViewController()
-            destinationVC.singleCoin = cryptoResult?.data.coins[indexPath.row]
+            
+            if isFavActive{
+                destinationVC.singleCoin = favCryptos[indexPath.row]
+            }else{
+                destinationVC.singleCoin = cryptoResult?.data.coins[indexPath.row]
+            }
             navigationController?.pushViewController(destinationVC, animated: true)
+            
+            
         
-        case collectionViewCategory:
+        
+        /*case collectionViewCategory:
             
             guard let category = Category(rawValue: categories[indexPath.row]) else {
                 return
             }
             sortCryptos(cryptoResult: cryptoResult, category: category)
-            // Önceki seçilen hücrenin alt çizgisini gizle
                    if let previousIndex = selectedCategoryIndex {
                        if let previousCell = collectionView.cellForItem(at: previousIndex) as? CategoryCell {
                            previousCell.bottomLine.isHidden = true
@@ -246,7 +244,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                        cell.categoryNameLabel.textColor = .white
                        selectedCategoryIndex = indexPath // Seçilen hücrenin indexPath'ini sakla
                        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-                   }
+                   }*/
             
         default:
             break
@@ -257,12 +255,31 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         print(category)
         guard var result = cryptoResult else {
-            return  // Eğer cryptoResult nil ise, nil döndür
+            return
         }
 
         var coins = result.data.coins
     
         switch category{
+            
+        case .Favorites:
+            favCryptos.removeAll()
+            for coinID in coinIDs {
+                // coinID'ye sahip coin'leri filtrele
+                let filteredCoins = cryptoResult?.data.coins.filter { coin in
+                    if let coinUUID = coin.uuid, coinUUID == coinID {
+                        return true
+                    } else {
+                        return false
+                    }
+                } ?? []
+                
+                // Filtrelenen coin'leri favoritesCoins dizisine ekle
+                favCryptos.append(contentsOf: filteredCoins)
+            }
+            print(favCryptos.count)
+           
+            
         case .Gainers:
             coins = coins.sorted { coin1, coin2 in
                 guard let change1 = Float(coin1.change ?? ""), let change2 = Float(coin2.change ?? "") else {
@@ -293,13 +310,36 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             }
 
         default:
-            print("a")
             break
         }
-       
-        result.data.coins = coins
-        self.cryptoResult = result
-        collectionViewCrypto.reloadData()
+        
+            result.data.coins = coins
+            self.cryptoResult = result
+            collectionViewCrypto.reloadData()
+        
+        
+    }
+    
+    
+    func fetchCoins(){
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoinData")
+        fetchRequest.returnsObjectsAsFaults = false
+
+        do{
+            let coins = try context.fetch(fetchRequest)
+                   
+            for case let coin as NSManagedObject in coins {
+                if let id = coin.value(forKey: "id") as? String {
+                    coinIDs.append(id)
+                }
+            }
+            
+        }catch let error as NSError{
+            print("veriler geitirlirken hata oluştu \(error.localizedDescription)")
+        }
     }
 
 
@@ -308,9 +348,11 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         switch collectionView{
         case collectionViewCrypto:
-            return cryptoResult?.data.coins.count ?? 0
-        case collectionViewCategory:
-            return categories.count
+            if isFavActive{
+                return favCryptos.count
+            }else{
+                return cryptoResult?.data.coins.count ?? 0
+            }
         default:
             return 0
         }
@@ -322,16 +364,13 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         switch collectionView{
         case collectionViewCrypto:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CryptoCell
-            cell.configure(coin: cryptoResult?.data.coins[indexPath.row])
             
-            return cell
-        case collectionViewCategory:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell2", for: indexPath) as! CategoryCell
-            cell.categoryNameLabel.text = categories[indexPath.row]
-            if indexPath.row == 1{
-                cell.bottomLine.isHidden = false
-                cell.categoryNameLabel.textColor = . white
+            if isFavActive{
+                cell.configure(coin: favCryptos[indexPath.row])
+            }else{
+                cell.configure(coin: cryptoResult?.data.coins[indexPath.row])
             }
+            
             return cell
         default:
             return UICollectionViewCell()
@@ -396,7 +435,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         if collectionView == collectionViewCrypto {
-            return CGSize(width: collectionView.frame.size.width, height: 140)
+            return CGSize(width: collectionView.frame.size.width, height: 170)
         } else {
             return CGSize.zero
         }

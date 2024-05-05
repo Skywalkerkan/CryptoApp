@@ -71,7 +71,43 @@ class HeaderReusableView: UICollectionReusableView {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .clear
+        collectionView.showsHorizontalScrollIndicator = false
         return collectionView
+    }()
+    
+    let seperator: UIView = {
+       let view = UIView()
+        view.backgroundColor = .lightGray
+        view.alpha = 0.5
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let nameLabel: UILabel = {
+       let label = UILabel()
+        label.text = "Name"
+        label.textColor = .gray
+        label.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let priceLabel: UILabel = {
+       let label = UILabel()
+        label.text = "Last price"
+        label.textColor = .gray
+        label.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let changeLabel: UILabel = {
+       let label = UILabel()
+        label.text = "24h chg%"
+        label.textColor = .gray
+        label.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     var categories = ["Favorites", "Hot", "Gainers", "Losers", "24h Volume", "Market Cap"]
@@ -109,16 +145,31 @@ class HeaderReusableView: UICollectionReusableView {
         usdStackView.addArrangedSubview(totalBalanceLabelUsdt)
         usdStackView.addArrangedSubview(totalBalanceLabelUsd)
         
-        
-        
-        
+        headerView.addSubview(seperator)
+        seperator.topAnchor.constraint(equalTo: usdStackView.bottomAnchor, constant: 16).isActive = true
+        seperator.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
+        seperator.trailingAnchor.constraint(equalTo: headerView.trailingAnchor).isActive = true
+        seperator.heightAnchor.constraint(equalToConstant: 0.2).isActive = true
+
         headerView.addSubview(collectionView)
-        collectionView.topAnchor.constraint(equalTo: usdStackView.bottomAnchor, constant: 10).isActive = true
+        collectionView.topAnchor.constraint(equalTo: seperator.bottomAnchor, constant: 10).isActive = true
         collectionView.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: headerView.trailingAnchor).isActive = true
-        collectionView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        collectionView.heightAnchor.constraint(equalToConstant: 35).isActive = true
         
+        headerView.addSubview(nameLabel)
+        nameLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 0).isActive = true
+        nameLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16).isActive = true
         
+        headerView.addSubview(changeLabel)
+        changeLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 0).isActive = true
+        changeLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16).isActive = true
+        
+        headerView.addSubview(priceLabel)
+        priceLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 0).isActive = true
+        priceLabel.trailingAnchor.constraint(equalTo: changeLabel.leadingAnchor, constant: -45).isActive = true
+        
+
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(CategoryCell.self, forCellWithReuseIdentifier: "cell3")
@@ -149,7 +200,6 @@ extension HeaderReusableView: UICollectionViewDataSource, UICollectionViewDelega
                 previousCell.categoryNameLabel.textColor = .gray
             }
         }
-        // Seçilen hücrenin alt çizgisini göster
         if let cell = collectionView.cellForItem(at: indexPath) as? CategoryCell {
             cell.bottomLine.isHidden = false
             cell.categoryNameLabel.textColor = .white
@@ -160,7 +210,6 @@ extension HeaderReusableView: UICollectionViewDataSource, UICollectionViewDelega
         
     }
     
-    // Koleksiyon hücrelerinin boyutunu belirleyin
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
                 return CGSize(width: 50, height: 50)

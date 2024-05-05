@@ -6,11 +6,199 @@
 //
 
 import UIKit
+import CoreData
 
 class DetailViewController: UIViewController {
-
     
     var singleCoin: Coin?
+    var isStarred: Bool = false
+    
+    let topNavigationView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }()
+    
+    let cryptoNameLabel: UILabel = {
+        let label = UILabel()
+        label.text = "ARKM/USDT"
+        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var starButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setBackgroundImage(UIImage(systemName: "star")?.withRenderingMode(.alwaysOriginal).withTintColor(.white), for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+        button.addTarget(self, action: #selector(starClicked), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc func starClicked(){
+        if !isStarred{
+            starButton.setBackgroundImage(UIImage(systemName: "star.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.yellow), for: .normal)
+            saveCoin()
+        }else{
+            starButton.setBackgroundImage(UIImage(systemName: "star")?.withRenderingMode(.alwaysOriginal).withTintColor(.white), for: .normal)
+            guard let id = singleCoin?.uuid else{return}
+            deleteCoin(withId: id)
+        }
+        isStarred = !isStarred
+        fetchCoins()
+    }
+    
+    lazy var backButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setBackgroundImage(UIImage(systemName: "arrow.backward")?.withRenderingMode(.alwaysOriginal).withTintColor(.white), for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+        button.addTarget(self, action: #selector(backClicked), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc func backClicked(){
+        navigationController?.popViewController(animated: true)
+    }
+    
+    let infoView: UIView = {
+       let view = UIView()
+        view.backgroundColor = .black
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let priceChangeStackView: UIStackView = {
+       let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .leading
+        stackView.spacing = 4
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    let priceLabelUsdt: UILabel = {
+       let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .green
+        label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
+        label.text = "2.4350"
+        return label
+    }()
+    
+    let priceLabelUsd: UILabel = {
+       let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.text = "≈ $2.43"
+        return label
+    }()
+    
+    let changeLabel: UILabel = {
+       let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.text = "+10.11%"
+        label.textColor = .green
+        return label
+    }()
+    
+    let leftStackView: UIStackView = {
+        let stackView = UIStackView()
+         stackView.axis = .vertical
+         stackView.alignment = .leading
+         stackView.spacing = 2
+         stackView.translatesAutoresizingMaskIntoConstraints = false
+         return stackView
+     }()
+    
+    let high24hLabel: UILabel = {
+       let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.text = "24h High"
+        label.textColor = .gray
+        return label
+    }()
+    
+    let high24hValueLabel: UILabel = {
+       let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.text = "+10.1123211%"
+        label.textColor = .white
+        return label
+    }()
+    
+    let low24hLabel: UILabel = {
+       let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.text = "24h Low"
+        label.textColor = .gray
+        return label
+    }()
+    
+    let low24hValueLabel: UILabel = {
+       let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.text = "+10.11%"
+        label.textColor = .white
+        return label
+    }()
+    
+    let rightStackView: UIStackView = {
+        let stackView = UIStackView()
+         stackView.axis = .vertical
+         stackView.alignment = .leading
+         stackView.spacing = 2
+         stackView.translatesAutoresizingMaskIntoConstraints = false
+         return stackView
+     }()
+    
+    
+    let vol24hCryptoLabel: UILabel = {
+       let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.text = "24h High"
+        label.textColor = .gray
+        return label
+    }()
+    
+    let vol24hCryptoValueLabel: UILabel = {
+       let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.text = "24h Vol"
+        label.textColor = .white
+        return label
+    }()
+    
+    let vol24hUsdtLabel: UILabel = {
+       let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.text = "24h Vol(USDT)"
+        label.textColor = .gray
+        return label
+    }()
+    
+    let vol24hUsdtValueLabel: UILabel = {
+       let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.text = "126.66M"
+        label.textColor = .white
+        return label
+    }()
+     
     
     var lineChartView: LineChartView = {
        let view = LineChartView()
@@ -28,26 +216,27 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
         guard let dataStrings = singleCoin?.sparkline else { return }
         let dataValues = dataStrings.compactMap { Float($0) }
+        print(dataValues)
+        view.backgroundColor = UIColor(red: 38/255, green: 41/255, blue: 48/255, alpha: 1)
 
-        view.backgroundColor = .black
+
+        setDetails()
+        setupViews()
+        fetchCoins()
         
-        view.addSubview(backView)
+      /*  view.addSubview(backView)
         backView.backgroundColor = .gray
         backView.backgroundColor = .black
-        
-        
-        backView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        backView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+          
+        backView.topAnchor.constraint(equalTo: rightStackView.bottomAnchor, constant: 16).isActive = true
+        backView.heightAnchor.constraint(equalToConstant: 330).isActive = true
         backView.widthAnchor.constraint(equalToConstant: 400).isActive = true
-        
-        setupCandleChart(data: dataValues)
-        
-        
-        
-      /*  let maxFloat = dataValues.max() ?? 0
+          
+        setupCandleChart(data: dataValues)*/
+    
+        let maxFloat = dataValues.max() ?? 0
         let minFloat = dataValues.min() ?? 0
 
         let range = maxFloat - minFloat
@@ -84,31 +273,173 @@ class DetailViewController: UIViewController {
             NSLayoutConstraint.activate([
                 label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
                 label.heightAnchor.constraint(equalToConstant: 12),
-                label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: CGFloat(i) * 75 - 5)
+                label.topAnchor.constraint(equalTo: rightStackView.bottomAnchor, constant: CGFloat(i) * 80 + 40)
             ])
             labelOuter = label
         }
         
         view.addSubview(lineChartView)
 
-        lineChartView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        lineChartView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        lineChartView.topAnchor.constraint(equalTo: rightStackView.bottomAnchor, constant: 40).isActive = true
+        lineChartView.heightAnchor.constraint(equalToConstant: 330).isActive = true
         lineChartView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         lineChartView.trailingAnchor.constraint(equalTo: labelOuter.leadingAnchor, constant: -5).isActive = true
-
-        
-        
-        
-        
                 
-        lineChartView.data = dataValues*/
+        lineChartView.data = dataValues
+    
+    }
+    
+    func setDetails(){
+        guard let singleCoin = singleCoin else{return}
+        cryptoNameLabel.text = singleCoin.symbol
+        guard let price = singleCoin.price, let priceFloat = Float(price) else { return }
+
+        let formattedPriceUsdt = String(format: "%.2f", priceFloat)
+        priceLabelUsdt.text = formattedPriceUsdt
+        let formattedPriceUsd = String(format: "%.1f", priceFloat)
+        priceLabelUsd.text = formattedPriceUsd
         
-      
-        
-        
+        changeLabel.text = singleCoin.change
         
 
+        let sparklineDoubles = singleCoin.sparkline?.compactMap { Double($0) }
+
+        guard let maxPriceDouble = sparklineDoubles?.max(),
+              let minPriceDouble = sparklineDoubles?.min() else {
+            return
+        }
+        let formattedHighestPrice = String(format: "%.2f", maxPriceDouble)
+        let formattedLowestPrice = String(format: "%.2f", minPriceDouble)
+        high24hValueLabel.text = formattedHighestPrice
+        low24hValueLabel.text = formattedLowestPrice
+
+        vol24hUsdtValueLabel.text = singleCoin.the24HVolume?.formatVolume()
     }
+    
+    func saveCoin(){
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        let entity = NSEntityDescription.entity(forEntityName: "CoinData", in: context)!
+        let coin = NSManagedObject(entity: entity, insertInto: context)
+        
+        guard let id = singleCoin?.uuid else{return}
+        coin.setValue(id, forKey: "id")
+        
+        do{
+            try context.save()
+            print("Veri Başarıyla kaydedildi")
+        }catch let error as NSError{
+            print("Veri Kaydedilirken hata oluştu \(error.localizedDescription)")
+        }
+        
+    }
+    
+    func fetchCoins(){
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoinData")
+        fetchRequest.returnsObjectsAsFaults = false
+
+        do{
+            let coins = try context.fetch(fetchRequest)
+                   
+            for case let coin as NSManagedObject in coins {
+                if let id = coin.value(forKey: "id") as? String {
+                    if id == singleCoin?.uuid{
+                        isStarred = true
+                        starButton.setBackgroundImage(UIImage(systemName: "star.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.yellow), for: .normal)
+                    }
+                }
+            }
+            
+        }catch let error as NSError{
+            print("veriler geitirlirken hata oluştu \(error.localizedDescription)")
+        }
+    }
+    
+    func deleteCoin(withId id: String) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoinData")
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id)
+        
+        do {
+            let results = try context.fetch(fetchRequest)
+            for object in results {
+                guard let coin = object as? NSManagedObject else { continue }
+                context.delete(coin)
+            }
+            try context.save()
+            print("Coin \(id) silindi.")
+        } catch {
+            print("Coin silinirken hata oluştu: \(error.localizedDescription)")
+        }
+    }
+
+    
+    
+    func setupViews(){
+        var statusBarHeight: CGFloat = 0
+        if #available(iOS 13.0, *) {
+            statusBarHeight = UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+        } else {
+            statusBarHeight = UIApplication.shared.statusBarFrame.height
+        }
+        
+        view.addSubview(topNavigationView)
+        topNavigationView.heightAnchor.constraint(equalToConstant: statusBarHeight+40).isActive = true
+        topNavigationView.widthAnchor.constraint(equalToConstant: view.frame.size.width).isActive = true
+        topNavigationView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        
+        topNavigationView.addSubview(backButton)
+        backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5).isActive = true
+        backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        backButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        backButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        
+        topNavigationView.addSubview(cryptoNameLabel)
+        cryptoNameLabel.centerYAnchor.constraint(equalTo: backButton.centerYAnchor).isActive = true
+        cryptoNameLabel.leadingAnchor.constraint(equalTo: backButton.trailingAnchor, constant: 16).isActive = true
+        
+        topNavigationView.addSubview(starButton)
+        starButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 3).isActive = true
+        starButton.trailingAnchor.constraint(equalTo: topNavigationView.trailingAnchor, constant: -16).isActive = true
+        starButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        starButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        
+        view.addSubview(priceLabelUsdt)
+        priceLabelUsdt.topAnchor.constraint(equalTo: topNavigationView.bottomAnchor, constant: 16).isActive = true
+        priceLabelUsdt.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+
+        view.addSubview(priceChangeStackView)
+        priceChangeStackView.topAnchor.constraint(equalTo: priceLabelUsdt.bottomAnchor, constant: 4).isActive = true
+        priceChangeStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+
+        priceChangeStackView.addArrangedSubview(priceLabelUsd)
+        priceChangeStackView.addArrangedSubview(changeLabel)
+        
+        
+        view.addSubview(rightStackView)
+        rightStackView.topAnchor.constraint(equalTo: topNavigationView.bottomAnchor, constant: 16).isActive = true
+        rightStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+        rightStackView.addArrangedSubview(vol24hCryptoLabel)
+        rightStackView.addArrangedSubview(vol24hCryptoValueLabel)
+        rightStackView.addArrangedSubview(vol24hUsdtLabel)
+        rightStackView.addArrangedSubview(vol24hUsdtValueLabel)
+        rightStackView.setCustomSpacing(8, after: vol24hCryptoValueLabel)
+        
+        view.addSubview(leftStackView)
+        leftStackView.topAnchor.constraint(equalTo: topNavigationView.bottomAnchor, constant: 16).isActive = true
+        leftStackView.trailingAnchor.constraint(equalTo: rightStackView.leadingAnchor, constant: -16).isActive = true
+        leftStackView.addArrangedSubview(high24hLabel)
+        leftStackView.addArrangedSubview(high24hValueLabel)
+        leftStackView.addArrangedSubview(low24hLabel)
+        leftStackView.addArrangedSubview(low24hValueLabel)
+        leftStackView.setCustomSpacing(8, after: high24hValueLabel)
+    }
+    
     
     func calculatePositions(data: [Float], viewHeight: CGFloat) -> [CGFloat] {
         let maxValue = CGFloat(data.max() ?? 0)
@@ -225,7 +556,12 @@ class DetailViewController: UIViewController {
                 heights[i] = 1
             }
             
-            //print(percentDiff)
+            if percentDiff > 0{
+                candleView.backgroundColor = AppColors.green
+            }else{
+                candleView.backgroundColor = AppColors.red
+            }
+
             if i == 0{
                 NSLayoutConstraint.activate([
                     candleView.heightAnchor.constraint(equalToConstant: CGFloat(heights[i])), // Yükseklik
@@ -233,11 +569,7 @@ class DetailViewController: UIViewController {
                     candleView.topAnchor.constraint(equalTo: backView.topAnchor, constant: CGFloat(position)),
                     candleView.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 5), // Sol kenar
                 ])
-                if percentDiff > 0{
-                    candleView.backgroundColor = .green
-                }else{
-                    candleView.backgroundColor = .red
-                }
+              
             }else{
                 if percentDiff > 0 && primaryPercent > 0{
                     NSLayoutConstraint.activate([
@@ -246,7 +578,6 @@ class DetailViewController: UIViewController {
                         candleView.bottomAnchor.constraint(equalTo: primaryView.topAnchor),
                         candleView.leadingAnchor.constraint(equalTo: primaryView.trailingAnchor, constant: 5), // Sol kenar
                     ])
-                    candleView.backgroundColor = .green
                 }else if percentDiff < 0 && primaryPercent < 0{
                     NSLayoutConstraint.activate([
                         candleView.heightAnchor.constraint(equalToConstant: CGFloat(heights[i])), // Yükseklik
@@ -254,7 +585,6 @@ class DetailViewController: UIViewController {
                         candleView.topAnchor.constraint(equalTo: primaryView.bottomAnchor),
                         candleView.leadingAnchor.constraint(equalTo: primaryView.trailingAnchor, constant: 5), // Sol kenar
                     ])
-                    candleView.backgroundColor = .red
                 }
                 else if percentDiff > 0 && primaryPercent < 0{
                     NSLayoutConstraint.activate([
@@ -263,7 +593,6 @@ class DetailViewController: UIViewController {
                         candleView.bottomAnchor.constraint(equalTo: primaryView.bottomAnchor),
                         candleView.leadingAnchor.constraint(equalTo: primaryView.trailingAnchor, constant: 5), // Sol kenar
                     ])
-                    candleView.backgroundColor = .green
                 }
                 else if percentDiff < 0 && primaryPercent > 0{
                     NSLayoutConstraint.activate([
@@ -272,7 +601,6 @@ class DetailViewController: UIViewController {
                         candleView.topAnchor.constraint(equalTo: primaryView.topAnchor),
                         candleView.leadingAnchor.constraint(equalTo: primaryView.trailingAnchor, constant: 5), // Sol kenar
                     ])
-                    candleView.backgroundColor = .red
                 }
                 
                
