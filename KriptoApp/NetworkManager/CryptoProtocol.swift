@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+protocol CryptoProtocol{
+    func getAllCryptos(completion: @escaping(Result<CryptoResult, Error>) -> Void)
+}

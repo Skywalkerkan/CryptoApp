@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DE95A0512BE655E300F59BF1 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE95A0502BE655E300F59BF1 /* CategoryCell.swift */; };
+		DE95A0542BE6660400F59BF1 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE95A0532BE6660400F59BF1 /* Category.swift */; };
+		DE9F45632BE3A7F600F87EF6 /* BarChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE9F45622BE3A7F600F87EF6 /* BarChartViewController.swift */; };
 		DEAB7D192BE2DB800023353A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D182BE2DB800023353A /* AppDelegate.swift */; };
 		DEAB7D1B2BE2DB800023353A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D1A2BE2DB800023353A /* SceneDelegate.swift */; };
 		DEAB7D1D2BE2DB800023353A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D1C2BE2DB800023353A /* ViewController.swift */; };
@@ -14,9 +17,23 @@
 		DEAB7D232BE2DB800023353A /* KriptoApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D212BE2DB800023353A /* KriptoApp.xcdatamodeld */; };
 		DEAB7D252BE2DB810023353A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DEAB7D242BE2DB810023353A /* Assets.xcassets */; };
 		DEAB7D282BE2DB810023353A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = DEAB7D272BE2DB810023353A /* Base */; };
+		DEAB7D342BE2E0D40023353A /* CryptoProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D332BE2E0D40023353A /* CryptoProtocol.swift */; };
+		DEAB7D362BE2E10C0023353A /* Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D352BE2E10C0023353A /* Crypto.swift */; };
+		DEAB7D382BE2E1BA0023353A /* CyptoLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D372BE2E1BA0023353A /* CyptoLogic.swift */; };
+		DEAB7D3A2BE2E22A0023353A /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D392BE2E22A0023353A /* NetworkService.swift */; };
+		DEAB7D3D2BE2E29A0023353A /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = DEAB7D3C2BE2E29A0023353A /* Kingfisher */; };
+		DEAB7D402BE2E2AD0023353A /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = DEAB7D3F2BE2E2AD0023353A /* Alamofire */; };
+		DEAB7D422BE2E2AD0023353A /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = DEAB7D412BE2E2AD0023353A /* AlamofireDynamic */; };
+		DEAB7D452BE2E3FC0023353A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D442BE2E3FC0023353A /* Constants.swift */; };
+		DEAB7D472BE2E4560023353A /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D462BE2E4560023353A /* Router.swift */; };
+		DEAB7D492BE2F0AE0023353A /* CryptoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D482BE2F0AE0023353A /* CryptoCell.swift */; };
+		DEAB7D4B2BE3004A0023353A /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D4A2BE3004A0023353A /* DetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DE95A0502BE655E300F59BF1 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
+		DE95A0532BE6660400F59BF1 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		DE9F45622BE3A7F600F87EF6 /* BarChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartViewController.swift; sourceTree = "<group>"; };
 		DEAB7D152BE2DB800023353A /* KriptoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KriptoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEAB7D182BE2DB800023353A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DEAB7D1A2BE2DB800023353A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -26,6 +43,14 @@
 		DEAB7D242BE2DB810023353A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DEAB7D272BE2DB810023353A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DEAB7D292BE2DB810023353A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DEAB7D332BE2E0D40023353A /* CryptoProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoProtocol.swift; sourceTree = "<group>"; };
+		DEAB7D352BE2E10C0023353A /* Crypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto.swift; sourceTree = "<group>"; };
+		DEAB7D372BE2E1BA0023353A /* CyptoLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyptoLogic.swift; sourceTree = "<group>"; };
+		DEAB7D392BE2E22A0023353A /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		DEAB7D442BE2E3FC0023353A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		DEAB7D462BE2E4560023353A /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		DEAB7D482BE2F0AE0023353A /* CryptoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoCell.swift; sourceTree = "<group>"; };
+		DEAB7D4A2BE3004A0023353A /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,12 +58,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DEAB7D3D2BE2E29A0023353A /* Kingfisher in Frameworks */,
+				DEAB7D422BE2E2AD0023353A /* AlamofireDynamic in Frameworks */,
+				DEAB7D402BE2E2AD0023353A /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DE95A0522BE665FB00F59BF1 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				DE95A0532BE6660400F59BF1 /* Category.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
 		DEAB7D0C2BE2DB800023353A = {
 			isa = PBXGroup;
 			children = (
@@ -58,9 +94,14 @@
 		DEAB7D172BE2DB800023353A /* KriptoApp */ = {
 			isa = PBXGroup;
 			children = (
+				DE95A0522BE665FB00F59BF1 /* Helper */,
+				DEAB7D432BE2E3F30023353A /* Constants */,
+				DEAB7D322BE2E0A80023353A /* NetworkManager */,
+				DEAB7D312BE2E09C0023353A /* Controller */,
+				DEAB7D302BE2E0980023353A /* View */,
+				DEAB7D2F2BE2E0930023353A /* Model */,
 				DEAB7D182BE2DB800023353A /* AppDelegate.swift */,
 				DEAB7D1A2BE2DB800023353A /* SceneDelegate.swift */,
-				DEAB7D1C2BE2DB800023353A /* ViewController.swift */,
 				DEAB7D1E2BE2DB800023353A /* Main.storyboard */,
 				DEAB7D242BE2DB810023353A /* Assets.xcassets */,
 				DEAB7D262BE2DB810023353A /* LaunchScreen.storyboard */,
@@ -68,6 +109,52 @@
 				DEAB7D212BE2DB800023353A /* KriptoApp.xcdatamodeld */,
 			);
 			path = KriptoApp;
+			sourceTree = "<group>";
+		};
+		DEAB7D2F2BE2E0930023353A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				DEAB7D352BE2E10C0023353A /* Crypto.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		DEAB7D302BE2E0980023353A /* View */ = {
+			isa = PBXGroup;
+			children = (
+				DEAB7D482BE2F0AE0023353A /* CryptoCell.swift */,
+				DE95A0502BE655E300F59BF1 /* CategoryCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		DEAB7D312BE2E09C0023353A /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				DEAB7D1C2BE2DB800023353A /* ViewController.swift */,
+				DEAB7D4A2BE3004A0023353A /* DetailViewController.swift */,
+				DE9F45622BE3A7F600F87EF6 /* BarChartViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		DEAB7D322BE2E0A80023353A /* NetworkManager */ = {
+			isa = PBXGroup;
+			children = (
+				DEAB7D332BE2E0D40023353A /* CryptoProtocol.swift */,
+				DEAB7D372BE2E1BA0023353A /* CyptoLogic.swift */,
+				DEAB7D392BE2E22A0023353A /* NetworkService.swift */,
+				DEAB7D462BE2E4560023353A /* Router.swift */,
+			);
+			path = NetworkManager;
+			sourceTree = "<group>";
+		};
+		DEAB7D432BE2E3F30023353A /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				DEAB7D442BE2E3FC0023353A /* Constants.swift */,
+			);
+			path = Constants;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -86,6 +173,11 @@
 			dependencies = (
 			);
 			name = KriptoApp;
+			packageProductDependencies = (
+				DEAB7D3C2BE2E29A0023353A /* Kingfisher */,
+				DEAB7D3F2BE2E2AD0023353A /* Alamofire */,
+				DEAB7D412BE2E2AD0023353A /* AlamofireDynamic */,
+			);
 			productName = KriptoApp;
 			productReference = DEAB7D152BE2DB800023353A /* KriptoApp.app */;
 			productType = "com.apple.product-type.application";
@@ -114,6 +206,10 @@
 				Base,
 			);
 			mainGroup = DEAB7D0C2BE2DB800023353A;
+			packageReferences = (
+				DEAB7D3B2BE2E29A0023353A /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				DEAB7D3E2BE2E2AD0023353A /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			productRefGroup = DEAB7D162BE2DB800023353A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -141,10 +237,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DEAB7D362BE2E10C0023353A /* Crypto.swift in Sources */,
 				DEAB7D232BE2DB800023353A /* KriptoApp.xcdatamodeld in Sources */,
+				DEAB7D472BE2E4560023353A /* Router.swift in Sources */,
+				DE95A0512BE655E300F59BF1 /* CategoryCell.swift in Sources */,
+				DE9F45632BE3A7F600F87EF6 /* BarChartViewController.swift in Sources */,
+				DEAB7D4B2BE3004A0023353A /* DetailViewController.swift in Sources */,
+				DEAB7D3A2BE2E22A0023353A /* NetworkService.swift in Sources */,
+				DEAB7D342BE2E0D40023353A /* CryptoProtocol.swift in Sources */,
 				DEAB7D1D2BE2DB800023353A /* ViewController.swift in Sources */,
+				DEAB7D492BE2F0AE0023353A /* CryptoCell.swift in Sources */,
 				DEAB7D192BE2DB800023353A /* AppDelegate.swift in Sources */,
+				DE95A0542BE6660400F59BF1 /* Category.swift in Sources */,
 				DEAB7D1B2BE2DB800023353A /* SceneDelegate.swift in Sources */,
+				DEAB7D382BE2E1BA0023353A /* CyptoLogic.swift in Sources */,
+				DEAB7D452BE2E3FC0023353A /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -367,6 +474,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DEAB7D3B2BE2E29A0023353A /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.11.0;
+			};
+		};
+		DEAB7D3E2BE2E2AD0023353A /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DEAB7D3C2BE2E29A0023353A /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DEAB7D3B2BE2E29A0023353A /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		DEAB7D3F2BE2E2AD0023353A /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DEAB7D3E2BE2E2AD0023353A /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		DEAB7D412BE2E2AD0023353A /* AlamofireDynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DEAB7D3E2BE2E2AD0023353A /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = AlamofireDynamic;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		DEAB7D212BE2DB800023353A /* KriptoApp.xcdatamodeld */ = {

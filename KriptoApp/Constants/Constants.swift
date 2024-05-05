@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+struct Constants{
+    static let cryptoUrl: String = "https://psp-merchantpanel-service-sandbox.ozanodeme.com.tr/api/v1/dummy/coins"
+}
