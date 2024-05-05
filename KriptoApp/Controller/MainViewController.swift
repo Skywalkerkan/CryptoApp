@@ -86,7 +86,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     var isFavActive: Bool = false
     var categories = ["Favorites", "Hot", "Gainers", "Losers", "24h Volume", "Market Cap"]
     var coinIDs = [String]()
-    var selectedCategoryIndex: IndexPath? = [0, 1]
+    var selectedCoinIndex: IndexPath = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -222,30 +222,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 destinationVC.singleCoin = cryptoResult?.data.coins[indexPath.row]
             }
             navigationController?.pushViewController(destinationVC, animated: true)
-            
-            
-        
-        
-        /*case collectionViewCategory:
-            
-            guard let category = Category(rawValue: categories[indexPath.row]) else {
-                return
-            }
-            sortCryptos(cryptoResult: cryptoResult, category: category)
-                   if let previousIndex = selectedCategoryIndex {
-                       if let previousCell = collectionView.cellForItem(at: previousIndex) as? CategoryCell {
-                           previousCell.bottomLine.isHidden = true
-                           previousCell.categoryNameLabel.textColor = .gray
-                       }
-                   }
-                   // Seçilen hücrenin alt çizgisini göster
-                   if let cell = collectionView.cellForItem(at: indexPath) as? CategoryCell {
-                       cell.bottomLine.isHidden = false
-                       cell.categoryNameLabel.textColor = .white
-                       selectedCategoryIndex = indexPath // Seçilen hücrenin indexPath'ini sakla
-                       collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-                   }*/
-            
+  
         default:
             break
         }

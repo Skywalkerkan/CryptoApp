@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		DE216B7A2BE7B6A5008A17F2 /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE216B792BE7B6A5008A17F2 /* AppColors.swift */; };
 		DE216B7D2BE7BE0E008A17F2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE216B7C2BE7BE0E008A17F2 /* Extensions.swift */; };
+		DE216B7F2BE7FAF3008A17F2 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE216B7E2BE7FAF3008A17F2 /* WebViewController.swift */; };
 		DE95A0512BE655E300F59BF1 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE95A0502BE655E300F59BF1 /* CategoryCell.swift */; };
 		DE95A0542BE6660400F59BF1 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE95A0532BE6660400F59BF1 /* Category.swift */; };
 		DE9EF7A42BE78A1800685BEC /* HeaderReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE9EF7A32BE78A1800685BEC /* HeaderReusableView.swift */; };
@@ -36,6 +37,7 @@
 /* Begin PBXFileReference section */
 		DE216B792BE7B6A5008A17F2 /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
 		DE216B7C2BE7BE0E008A17F2 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		DE216B7E2BE7FAF3008A17F2 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		DE95A0502BE655E300F59BF1 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		DE95A0532BE6660400F59BF1 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		DE9EF7A32BE78A1800685BEC /* HeaderReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderReusableView.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 				DEAB7D1C2BE2DB800023353A /* MainViewController.swift */,
 				DEAB7D4A2BE3004A0023353A /* DetailViewController.swift */,
 				DE9F45622BE3A7F600F87EF6 /* BarChartViewController.swift */,
+				DE216B7E2BE7FAF3008A17F2 /* WebViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -254,6 +257,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DE216B7F2BE7FAF3008A17F2 /* WebViewController.swift in Sources */,
 				DEAB7D362BE2E10C0023353A /* Crypto.swift in Sources */,
 				DE216B7D2BE7BE0E008A17F2 /* Extensions.swift in Sources */,
 				DEAB7D232BE2DB800023353A /* KriptoApp.xcdatamodeld in Sources */,

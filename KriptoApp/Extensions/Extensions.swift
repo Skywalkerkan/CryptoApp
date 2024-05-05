@@ -7,8 +7,6 @@
 
 import Foundation
 
-
-
 extension String {
     func formatVolume() -> String {
         guard let volumeDouble = Double(self) else {
@@ -24,9 +22,12 @@ extension String {
         case 1_000_000..<1_000_000_000:
             let millionVolume = volumeDouble / 1_000_000
             return "\(sign)\(String(format: "%.2f", millionVolume))M"
-        default:
+        case 1_000_000_000..<1_000_000_000_000:
             let billionVolume = volumeDouble / 1_000_000_000
             return "\(sign)\(String(format: "%.2f", billionVolume))B"
+        default:
+            let trillionVolume = volumeDouble / 1_000_000_000_000
+            return "\(sign)\(String(format: "%.2f", trillionVolume))T"
         }
     }
 }

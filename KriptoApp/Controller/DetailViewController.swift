@@ -8,6 +8,7 @@
 import UIKit
 import CoreData
 
+
 class DetailViewController: UIViewController {
     
     var singleCoin: Coin?
@@ -63,6 +64,24 @@ class DetailViewController: UIViewController {
     @objc func backClicked(){
         navigationController?.popViewController(animated: true)
     }
+    
+    lazy var webButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setBackgroundImage(UIImage(systemName: "network")?.withRenderingMode(.alwaysOriginal).withTintColor(.white), for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+        button.addTarget(self, action: #selector(webClicked), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc func webClicked() {
+        let webViewController = WebViewController()
+        webViewController.url = singleCoin?.coinrankingURL ?? "https://coinranking.com"
+        let navigationController = UINavigationController(rootViewController: webViewController)
+        navigationController.modalPresentationStyle = .pageSheet
+        present(navigationController, animated: true, completion: nil)
+    }
+
     
     let infoView: UIView = {
        let view = UIView()
@@ -121,7 +140,7 @@ class DetailViewController: UIViewController {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
-        label.text = "24h High"
+        label.text = "Market Cap"
         label.textColor = .gray
         return label
     }()
@@ -172,7 +191,7 @@ class DetailViewController: UIViewController {
         return label
     }()
     
-    let vol24hCryptoValueLabel: UILabel = {
+    let marketCapValue: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
@@ -211,7 +230,16 @@ class DetailViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    
 
+
+  /*  override func loadView() {
+           let webConfiguration = WKWebViewConfiguration()
+           webView = WKWebView(frame: .zero, configuration: webConfiguration)
+           webView.uiDelegate = self
+           view = webView
+       }*/
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -225,6 +253,7 @@ class DetailViewController: UIViewController {
         setDetails()
         setupViews()
         fetchCoins()
+        
         
       /*  view.addSubview(backView)
         backView.backgroundColor = .gray
@@ -312,7 +341,7 @@ class DetailViewController: UIViewController {
         let formattedLowestPrice = String(format: "%.2f", minPriceDouble)
         high24hValueLabel.text = formattedHighestPrice
         low24hValueLabel.text = formattedLowestPrice
-
+        marketCapValue.text = singleCoin.marketCap?.formatVolume()
         vol24hUsdtValueLabel.text = singleCoin.the24HVolume?.formatVolume()
     }
     
@@ -409,6 +438,12 @@ class DetailViewController: UIViewController {
         starButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
         starButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
+        topNavigationView.addSubview(webButton)
+        webButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 3).isActive = true
+        webButton.trailingAnchor.constraint(equalTo: starButton.leadingAnchor, constant: -16).isActive = true
+        webButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        webButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        
         view.addSubview(priceLabelUsdt)
         priceLabelUsdt.topAnchor.constraint(equalTo: topNavigationView.bottomAnchor, constant: 16).isActive = true
         priceLabelUsdt.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
@@ -425,10 +460,10 @@ class DetailViewController: UIViewController {
         rightStackView.topAnchor.constraint(equalTo: topNavigationView.bottomAnchor, constant: 16).isActive = true
         rightStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
         rightStackView.addArrangedSubview(vol24hCryptoLabel)
-        rightStackView.addArrangedSubview(vol24hCryptoValueLabel)
+        rightStackView.addArrangedSubview(marketCapValue)
         rightStackView.addArrangedSubview(vol24hUsdtLabel)
         rightStackView.addArrangedSubview(vol24hUsdtValueLabel)
-        rightStackView.setCustomSpacing(8, after: vol24hCryptoValueLabel)
+        rightStackView.setCustomSpacing(8, after: marketCapValue)
         
         view.addSubview(leftStackView)
         leftStackView.topAnchor.constraint(equalTo: topNavigationView.bottomAnchor, constant: 16).isActive = true
