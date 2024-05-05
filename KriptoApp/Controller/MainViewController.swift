@@ -16,70 +16,38 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         return collectionView
     }()
     
-    var collectionViewCategory: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 150, height: 50)
-        let collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: 0, height: 60), collectionViewLayout: layout)
-        collectionView.backgroundColor = .clear
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        return collectionView
+    lazy var deleteButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Delete", for: .normal)
+        button.backgroundColor =  .lightGray
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 4
+        button.isHidden = true
+        button.addTarget(self, action: #selector(deleteClicked), for: .touchUpInside)
+        return button
     }()
     
-    let balanceView: UIView = {
-       let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear
-        return view
-    }()
-    
-    let balanceStackView: UIStackView = {
-       let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .leading
-        stackView.distribution = .fillEqually
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
-    let usdStackView: UIStackView = {
-       let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .leading
-        stackView.spacing = 8
-        stackView.distribution = .equalSpacing
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
-    let balanceLabel: UILabel = {
-       let label = UILabel()
-        label.text = "Total Balance (USDT)"
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    let totalBalanceLabelUsdt: UILabel = {
-       let label = UILabel()
-        label.text = "21,135.90"
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    let totalBalanceLabelUsd: UILabel = {
-       let label = UILabel()
-        label.text = "≈ 21,135.9 $"
-        label.textColor = .gray
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
+    @objc func deleteClicked(){
+         deleteCoin(withId: selectedId)
+         coinIDs.removeAll()
+         favCryptos.removeAll()
+         fetchCoins()
+          for coinID in coinIDs {
+              let filteredCoins = cryptoResult?.data.coins.filter { coin in
+                  if let coinUUID = coin.uuid, coinUUID == coinID {
+                      return true
+                  } else {
+                      return false
+                  }
+              } ?? []
+              favCryptos.append(contentsOf: filteredCoins)
+          }
+          DispatchQueue.main.async {
+              self.collectionViewCrypto.reloadData()
+          }
+        deleteButton.isHidden = true
+    }
     
     var cryptoResult: CryptoResult?
     var favCryptos = [Coin]()
@@ -87,16 +55,15 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     var categories = ["Favorites", "Hot", "Gainers", "Losers", "24h Volume", "Market Cap"]
     var coinIDs = [String]()
     var selectedCoinIndex: IndexPath = []
+    var selectedId: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         viewsSetup()
         collectionViewSetup()
-      
  
         NotificationCenter.default.addObserver(self, selector: #selector(receiveNotification), name: Notification.Name("CustomNotification"), object: nil)
-
         
         CryptoLogic.shared.getAllCryptos { [weak self] result in
             guard let self else{return}
@@ -110,6 +77,50 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
             case .failure(let error):
                 print(error.localizedDescription)
             }
+        }
+        
+        
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        longPressGesture.minimumPressDuration = 0.5
+        collectionViewCrypto.addGestureRecognizer(longPressGesture)
+    }
+    
+    @objc func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
+           if gesture.state == .began {
+               let touchPoint = gesture.location(in: collectionViewCrypto)
+               if let indexPath = collectionViewCrypto.indexPathForItem(at: touchPoint),
+                  let cell = collectionViewCrypto.cellForItem(at: indexPath){
+                   
+                   let cellFrameInSuperview = collectionViewCrypto.convert(cell.frame, to: self.view)
+
+                   if isFavActive{
+                       print("Uzun basıldı! Hücre indeksi: \(indexPath.item)")
+                       guard let id = favCryptos[indexPath.row].uuid else{return}
+                       selectedId = id
+                       deleteButton.isHidden = false
+                       deleteButton.transform = CGAffineTransform(translationX: view.frame.width/2-40, y: cellFrameInSuperview.origin.y-30)
+                   }
+               }
+           }
+       }
+    
+    func deleteCoin(withId id: String) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoinData")
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id)
+        
+        do {
+            let results = try context.fetch(fetchRequest)
+            for object in results {
+                guard let coin = object as? NSManagedObject else { continue }
+                context.delete(coin)
+            }
+            try context.save()
+            print("Coin \(id) silindi.")
+        } catch {
+            print("Coin silinirken hata oluştu: \(error.localizedDescription)")
         }
     }
     
@@ -129,7 +140,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
             favCryptos.append(contentsOf: filteredCoins)
         }
         collectionViewCrypto.reloadData()
-  
+
     }
     
     @objc func receiveNotification(_ notification: Notification) {
@@ -150,41 +161,14 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         
         view.backgroundColor = UIColor(red: 38/255, green: 41/255, blue: 48/255, alpha: 1)
         
-       /* view.addSubview(balanceView)
-        balanceView.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        balanceView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        balanceView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        balanceView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        
-        balanceView.addSubview(balanceStackView)
-        balanceStackView.topAnchor.constraint(equalTo: balanceView.topAnchor, constant: 0).isActive = true
-        balanceStackView.leadingAnchor.constraint(equalTo: balanceView.leadingAnchor, constant: 16).isActive = true
-        balanceStackView.addArrangedSubview(balanceLabel)
-
-        balanceView.addSubview(usdStackView)
-        usdStackView.topAnchor.constraint(equalTo: balanceStackView.bottomAnchor, constant: 10).isActive = true
-        usdStackView.leadingAnchor.constraint(equalTo: balanceView.leadingAnchor, constant: 16).isActive = true
-        
-        usdStackView.addArrangedSubview(totalBalanceLabelUsdt)
-        usdStackView.addArrangedSubview(totalBalanceLabelUsd)*/
-       
-        /*balanceStackView.addArrangedSubview(totalBalanceLabelUsdt)
-        balanceStackView.addArrangedSubview(totalBalanceLabelUsd)*/
-        
-     /*   view.addSubview(collectionViewCategory)
-        collectionViewCategory.topAnchor.constraint(equalTo: balanceView.bottomAnchor).isActive = true
-        collectionViewCategory.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        collectionViewCategory.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        collectionViewCategory.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        */
-        
         navigationController?.navigationBar.isHidden = true
         view.addSubview(collectionViewCrypto)
         collectionViewCrypto.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         collectionViewCrypto.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         collectionViewCrypto.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         collectionViewCrypto.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        
+        view.addSubview(deleteButton)
+        deleteButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
 
     }
     
@@ -195,20 +179,12 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         collectionViewCrypto.register(CryptoCell.self, forCellWithReuseIdentifier: "cell")
         
         collectionViewCrypto.register(HeaderReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderReusableView.reuseIdentifier)
-/*
-        collectionViewCategory.delegate = self
-        collectionViewCategory.dataSource = self
-        collectionViewCategory.register(CategoryCell.self, forCellWithReuseIdentifier: "cell2")*/
-
     }
     
-    var lastContentOffset: CGFloat = 0
-
 }
 
 
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
-    
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
@@ -242,7 +218,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         case .Favorites:
             favCryptos.removeAll()
             for coinID in coinIDs {
-                // coinID'ye sahip coin'leri filtrele
                 let filteredCoins = cryptoResult?.data.coins.filter { coin in
                     if let coinUUID = coin.uuid, coinUUID == coinID {
                         return true
@@ -251,7 +226,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                     }
                 } ?? []
                 
-                // Filtrelenen coin'leri favoritesCoins dizisine ekle
                 favCryptos.append(contentsOf: filteredCoins)
             }
             print(favCryptos.count)
@@ -285,18 +259,12 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 }
                 return marketCap1 > marketCap2
             }
-
-        default:
-            break
         }
-        
+            deleteButton.isHidden = true
             result.data.coins = coins
             self.cryptoResult = result
             collectionViewCrypto.reloadData()
-        
-        
     }
-    
     
     func fetchCoins(){
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -304,7 +272,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoinData")
         fetchRequest.returnsObjectsAsFaults = false
-
         do{
             let coins = try context.fetch(fetchRequest)
                    
@@ -352,31 +319,13 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         default:
             return UICollectionViewCell()
         }
-        
-    
     }
-    
-    
+        
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         switch collectionView{
         case collectionViewCrypto:
             return CGSize(width: view.frame.size.width, height: 60)
-        case collectionViewCategory:
-            guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
-                        return CGSize(width: 50, height: 50) // Varsayılan bir boyut döndür
-                    }
-                    
-                    let collectionViewWidth = collectionView.frame.width
-                    let sectionInset = layout.sectionInset
-                    let availableWidth = collectionViewWidth - sectionInset.left - sectionInset.right
-                    
-                    let content = categories[indexPath.item] // yourContent, collectionView'daki içeriklerinizi temsil eden bir dizi olsun
-                    let labelSize = (content as NSString).size(withAttributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)]) // Font size'ı istediğiniz gibi ayarlayabilirsiniz
-                    
-                    let cellWidth = min(labelSize.width + 16, availableWidth) // Etiket genişliğinin, kullanılabilir genişlikten fazla olmamasını sağlar
-                    
-                    return CGSize(width: cellWidth, height: collectionView.bounds.height) // collectionView'ın yüksekliği kadar genişlik, herhangi bir yükseklik
         default:
             return CGSize()
         }
@@ -387,8 +336,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         switch collectionView{
-        case collectionViewCategory:
-            return UIEdgeInsets(top: 0, left: 14, bottom: 0, right: 14)
         case collectionViewCrypto:
            return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         default:
@@ -417,13 +364,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             return CGSize.zero
         }
     }
-    
-
-
-    
-    
-    
-    
 }
 
 
