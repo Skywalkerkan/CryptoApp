@@ -1,6 +1,8 @@
 import UIKit
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController, UIScrollViewDelegate {
+    
+
     
    // var lineChartView: LineChartView!
     
@@ -25,19 +27,77 @@ class ViewController: UIViewController {
         return collectionView
     }()
     
+    let balanceView: UIView = {
+       let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }()
+    
+    let balanceStackView: UIStackView = {
+       let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.distribution = .fillEqually
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    let usdStackView: UIStackView = {
+       let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.spacing = 8
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    let balanceLabel: UILabel = {
+       let label = UILabel()
+        label.text = "Total Balance (USDT)"
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let totalBalanceLabelUsdt: UILabel = {
+       let label = UILabel()
+        label.text = "21,135.90"
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let totalBalanceLabelUsd: UILabel = {
+       let label = UILabel()
+        label.text = "≈ 21,135.9 $"
+        label.textColor = .gray
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    
     var cryptoResult: CryptoResult?
     var categories = ["Favorites", "Hot", "Gainers", "Losers", "24h Volume", "Market Cap"]
-    var selectedCategoryIndex: IndexPath? = [0, 1] // Seçilen hücre
+    
+    var selectedCategoryIndex: IndexPath? = [0, 1]
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
- 
-      
-        
         viewsSetup()
         collectionViewSetup()
+      
  
+        NotificationCenter.default.addObserver(self, selector: #selector(receiveNotification), name: Notification.Name("CustomNotification"), object: nil)
+
+        
         CryptoLogic.shared.getAllCryptos { [weak self] result in
             guard let self else{return}
             
@@ -55,22 +115,57 @@ class ViewController: UIViewController {
         
     }
     
+    @objc func receiveNotification(_ notification: Notification) {
+           if let chosenCategory = notification.object as? String {
+               print("Alınan String: \(chosenCategory)")
+               
+               guard let category = Category(rawValue: chosenCategory) else {
+                   return
+               }
+               sortCryptos(cryptoResult: cryptoResult, category: category)
+                        
+           }
+       }
     
     private func viewsSetup(){
         
         view.backgroundColor = UIColor(red: 38/255, green: 41/255, blue: 48/255, alpha: 1)
         
-        view.addSubview(collectionViewCategory)
-        collectionViewCategory.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+       /* view.addSubview(balanceView)
+        balanceView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        balanceView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        balanceView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        balanceView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
+        balanceView.addSubview(balanceStackView)
+        balanceStackView.topAnchor.constraint(equalTo: balanceView.topAnchor, constant: 0).isActive = true
+        balanceStackView.leadingAnchor.constraint(equalTo: balanceView.leadingAnchor, constant: 16).isActive = true
+        balanceStackView.addArrangedSubview(balanceLabel)
+
+        balanceView.addSubview(usdStackView)
+        usdStackView.topAnchor.constraint(equalTo: balanceStackView.bottomAnchor, constant: 10).isActive = true
+        usdStackView.leadingAnchor.constraint(equalTo: balanceView.leadingAnchor, constant: 16).isActive = true
+        
+        usdStackView.addArrangedSubview(totalBalanceLabelUsdt)
+        usdStackView.addArrangedSubview(totalBalanceLabelUsd)*/
+       
+        /*balanceStackView.addArrangedSubview(totalBalanceLabelUsdt)
+        balanceStackView.addArrangedSubview(totalBalanceLabelUsd)*/
+        
+     /*   view.addSubview(collectionViewCategory)
+        collectionViewCategory.topAnchor.constraint(equalTo: balanceView.bottomAnchor).isActive = true
         collectionViewCategory.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         collectionViewCategory.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        collectionViewCategory.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        collectionViewCategory.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        */
         
+        navigationController?.navigationBar.isHidden = true
         view.addSubview(collectionViewCrypto)
-        collectionViewCrypto.topAnchor.constraint(equalTo: collectionViewCategory.bottomAnchor).isActive = true
+        collectionViewCrypto.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         collectionViewCrypto.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         collectionViewCrypto.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        collectionViewCrypto.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        collectionViewCrypto.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
 
     }
     
@@ -80,15 +175,48 @@ class ViewController: UIViewController {
         collectionViewCrypto.dataSource = self
         collectionViewCrypto.register(CryptoCell.self, forCellWithReuseIdentifier: "cell")
         
+        collectionViewCrypto.register(HeaderReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderReusableView.reuseIdentifier)
+/*
         collectionViewCategory.delegate = self
         collectionViewCategory.dataSource = self
-        collectionViewCategory.register(CategoryCell.self, forCellWithReuseIdentifier: "cell2")
+        collectionViewCategory.register(CategoryCell.self, forCellWithReuseIdentifier: "cell2")*/
 
     }
+    
+   // let initialYPosition = collectionView.frame.height + 20
+
+    
+    var lastContentOffset: CGFloat = 0
+    
+ /*   func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y // CollectionView'in dikey kaydırma konumu
+        
+        // UIView'in y dikey konumunu CollectionView'in kaydırma değerine bağlı olarak güncelleme
+      //  let newCenterY = offsetY + 150 // 150, başlangıç yüksekliğine eklemek istediğiniz bir değerdir
+     //   balanceView.center.y = -newCenterY
+        
+        if scrollView == collectionViewCrypto {
+            collectionViewCrypto.contentOffset = scrollView.contentOffset
+        }
+        let delta = scrollView.contentOffset.y
+        balanceView.transform = CGAffineTransform(translationX: 0, y: -delta)
+        collectionViewCrypto.transform = CGAffineTransform(translationX: 0, y: -delta)
+        collectionViewCategory.transform = CGAffineTransform(translationX: 0, y: -delta)
+        lastContentOffset = scrollView.contentOffset.x
+        
+     //   genderView.transform = CGAffineTransform(translationX: -delta, y: 0)
+        
+       // outerBusView.transform = CGAffineTransform(translationX: -delta, y: 0)
+        
+    }*/
+
+   
+
+
 }
 
 
-extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -230,10 +358,8 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
                     let content = categories[indexPath.item] // yourContent, collectionView'daki içeriklerinizi temsil eden bir dizi olsun
                     let labelSize = (content as NSString).size(withAttributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)]) // Font size'ı istediğiniz gibi ayarlayabilirsiniz
                     
-                    // Ek bir padding veya boşluk eklemek isterseniz burada ekleyebilirsiniz
                     let cellWidth = min(labelSize.width + 16, availableWidth) // Etiket genişliğinin, kullanılabilir genişlikten fazla olmamasını sağlar
                     
-                    // Hücre boyutunu döndür
                     return CGSize(width: cellWidth, height: collectionView.bounds.height) // collectionView'ın yüksekliği kadar genişlik, herhangi bir yükseklik
         default:
             return CGSize()
@@ -246,7 +372,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         switch collectionView{
         case collectionViewCategory:
-            return UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+            return UIEdgeInsets(top: 0, left: 14, bottom: 0, right: 14)
         case collectionViewCrypto:
            return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         default:
@@ -257,6 +383,27 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if collectionView == collectionViewCrypto && kind == UICollectionView.elementKindSectionHeader {
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderReusableView.reuseIdentifier, for: indexPath) as! HeaderReusableView
+            return header
+        } else {
+            return UICollectionReusableView()
+        }
+    }
+    
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        if collectionView == collectionViewCrypto {
+            return CGSize(width: collectionView.frame.size.width, height: 140)
+        } else {
+            return CGSize.zero
+        }
+    }
+    
+
+
     
     
     

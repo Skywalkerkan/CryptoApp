@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		DE95A0512BE655E300F59BF1 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE95A0502BE655E300F59BF1 /* CategoryCell.swift */; };
 		DE95A0542BE6660400F59BF1 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE95A0532BE6660400F59BF1 /* Category.swift */; };
+		DE9EF7A42BE78A1800685BEC /* HeaderReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE9EF7A32BE78A1800685BEC /* HeaderReusableView.swift */; };
 		DE9F45632BE3A7F600F87EF6 /* BarChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE9F45622BE3A7F600F87EF6 /* BarChartViewController.swift */; };
 		DEAB7D192BE2DB800023353A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D182BE2DB800023353A /* AppDelegate.swift */; };
 		DEAB7D1B2BE2DB800023353A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D1A2BE2DB800023353A /* SceneDelegate.swift */; };
@@ -33,6 +34,7 @@
 /* Begin PBXFileReference section */
 		DE95A0502BE655E300F59BF1 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		DE95A0532BE6660400F59BF1 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		DE9EF7A32BE78A1800685BEC /* HeaderReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderReusableView.swift; sourceTree = "<group>"; };
 		DE9F45622BE3A7F600F87EF6 /* BarChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartViewController.swift; sourceTree = "<group>"; };
 		DEAB7D152BE2DB800023353A /* KriptoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KriptoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEAB7D182BE2DB800023353A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 			children = (
 				DEAB7D482BE2F0AE0023353A /* CryptoCell.swift */,
 				DE95A0502BE655E300F59BF1 /* CategoryCell.swift */,
+				DE9EF7A32BE78A1800685BEC /* HeaderReusableView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -247,6 +250,7 @@
 				DEAB7D342BE2E0D40023353A /* CryptoProtocol.swift in Sources */,
 				DEAB7D1D2BE2DB800023353A /* MainViewController.swift in Sources */,
 				DEAB7D492BE2F0AE0023353A /* CryptoCell.swift in Sources */,
+				DE9EF7A42BE78A1800685BEC /* HeaderReusableView.swift in Sources */,
 				DEAB7D192BE2DB800023353A /* AppDelegate.swift in Sources */,
 				DE95A0542BE6660400F59BF1 /* Category.swift in Sources */,
 				DEAB7D1B2BE2DB800023353A /* SceneDelegate.swift in Sources */,
