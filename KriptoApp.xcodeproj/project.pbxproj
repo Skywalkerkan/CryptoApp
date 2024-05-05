@@ -12,7 +12,7 @@
 		DE9F45632BE3A7F600F87EF6 /* BarChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE9F45622BE3A7F600F87EF6 /* BarChartViewController.swift */; };
 		DEAB7D192BE2DB800023353A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D182BE2DB800023353A /* AppDelegate.swift */; };
 		DEAB7D1B2BE2DB800023353A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D1A2BE2DB800023353A /* SceneDelegate.swift */; };
-		DEAB7D1D2BE2DB800023353A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D1C2BE2DB800023353A /* ViewController.swift */; };
+		DEAB7D1D2BE2DB800023353A /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D1C2BE2DB800023353A /* MainViewController.swift */; };
 		DEAB7D202BE2DB800023353A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = DEAB7D1F2BE2DB800023353A /* Base */; };
 		DEAB7D232BE2DB800023353A /* KriptoApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DEAB7D212BE2DB800023353A /* KriptoApp.xcdatamodeld */; };
 		DEAB7D252BE2DB810023353A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DEAB7D242BE2DB810023353A /* Assets.xcassets */; };
@@ -37,7 +37,7 @@
 		DEAB7D152BE2DB800023353A /* KriptoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KriptoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEAB7D182BE2DB800023353A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DEAB7D1A2BE2DB800023353A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		DEAB7D1C2BE2DB800023353A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		DEAB7D1C2BE2DB800023353A /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		DEAB7D1F2BE2DB800023353A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DEAB7D222BE2DB800023353A /* KriptoApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = KriptoApp.xcdatamodel; sourceTree = "<group>"; };
 		DEAB7D242BE2DB810023353A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -131,7 +131,7 @@
 		DEAB7D312BE2E09C0023353A /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				DEAB7D1C2BE2DB800023353A /* ViewController.swift */,
+				DEAB7D1C2BE2DB800023353A /* MainViewController.swift */,
 				DEAB7D4A2BE3004A0023353A /* DetailViewController.swift */,
 				DE9F45622BE3A7F600F87EF6 /* BarChartViewController.swift */,
 			);
@@ -245,7 +245,7 @@
 				DEAB7D4B2BE3004A0023353A /* DetailViewController.swift in Sources */,
 				DEAB7D3A2BE2E22A0023353A /* NetworkService.swift in Sources */,
 				DEAB7D342BE2E0D40023353A /* CryptoProtocol.swift in Sources */,
-				DEAB7D1D2BE2DB800023353A /* ViewController.swift in Sources */,
+				DEAB7D1D2BE2DB800023353A /* MainViewController.swift in Sources */,
 				DEAB7D492BE2F0AE0023353A /* CryptoCell.swift in Sources */,
 				DEAB7D192BE2DB800023353A /* AppDelegate.swift in Sources */,
 				DE95A0542BE6660400F59BF1 /* Category.swift in Sources */,
