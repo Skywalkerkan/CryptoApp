@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import Kingfisher
 
 
 class DetailViewController: UIViewController {
@@ -29,6 +30,12 @@ class DetailViewController: UIViewController {
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    let cryptoImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
     lazy var starButton: UIButton = {
@@ -103,7 +110,7 @@ class DetailViewController: UIViewController {
     let priceLabelUsdt: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .green
+        label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
         label.text = "2.4350"
         return label
@@ -226,6 +233,12 @@ class DetailViewController: UIViewController {
         return view
     }()
     
+    var rsiLineChartView: LineChartView = {
+       let view = LineChartView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     let candleCharView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -262,6 +275,56 @@ class DetailViewController: UIViewController {
         setupCandleChart(data: allValues)
     }
     
+    let rsiLabel: UILabel = {
+        let rsiLabel = UILabel()
+        rsiLabel.translatesAutoresizingMaskIntoConstraints = false
+        rsiLabel.textColor = .white
+        rsiLabel.font = .systemFont(ofSize: 16, weight: .black)
+        rsiLabel.text = "RSI"
+        return rsiLabel
+    }()
+    
+    let chartLabel: UILabel = {
+        let rsiLabel = UILabel()
+        rsiLabel.translatesAutoresizingMaskIntoConstraints = false
+        rsiLabel.textColor = .white
+        rsiLabel.font = .systemFont(ofSize: 16, weight: .black)
+        rsiLabel.text = "Candle Chart"
+        return rsiLabel
+    }()
+    
+    lazy var buyButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Buy", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .black)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = AppColors.green
+        button.layer.cornerRadius = 4
+        button.addTarget(self, action: #selector(lineChartClicked), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var sellButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Sell", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .black)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = AppColors.red
+        button.layer.cornerRadius = 4
+        button.addTarget(self, action: #selector(lineChartClicked), for: .touchUpInside)
+        return button
+    }()
+    
+    let buttonStackView: UIStackView = {
+       let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.spacing = 16
+        return stackView
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -275,12 +338,13 @@ class DetailViewController: UIViewController {
         setDetails()
         setupViews()
         fetchCoins()
-        
-       // setupLineChartView(dataValues: dataValues)
- 
+         
         setupCandleChart(data: dataValues)
+        setupRsiChartView()
     }
     
+    
+    var labelOuterLeading = UILabel()
     func setupLineChartView(dataValues: [Float]){
         let maxFloat = dataValues.max() ?? 0
         let minFloat = dataValues.min() ?? 0
@@ -301,7 +365,7 @@ class DetailViewController: UIViewController {
         let averageValue = (startValue - endValue) / 4
 
         var labelOuter = UILabel()
-        for i in 0...4 {
+      /*  for i in 0...4 {
             let value = startValue - averageValue * Float(i)
             let label = UILabel()
             label.text = String(format: "%.2f", value)
@@ -317,16 +381,78 @@ class DetailViewController: UIViewController {
                 label.topAnchor.constraint(equalTo: lineChartButton.bottomAnchor, constant: CGFloat(i) * 80 + 16)
             ])
             labelOuter = label
-        }
+            labelOuterLeading = label
+        }*/
         
         view.addSubview(lineChartView)
-        lineChartView.topAnchor.constraint(equalTo: lineChartButton.bottomAnchor, constant: 16).isActive = true
-        lineChartView.heightAnchor.constraint(equalToConstant: 330).isActive = true
+        lineChartView.topAnchor.constraint(equalTo: chartLabel.bottomAnchor, constant: 24).isActive = true
+        lineChartView.heightAnchor.constraint(equalToConstant: 0.33*view.frame.size.height).isActive = true
         lineChartView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        lineChartView.trailingAnchor.constraint(equalTo: labelOuter.leadingAnchor, constant: -5).isActive = true
+        lineChartView.trailingAnchor.constraint(equalTo: labelOuterLeading.leadingAnchor, constant: -5).isActive = true
         lineChartView.data = dataValues
-
+        
+        
     }
+    
+    func setupRsiChartView(){
+        
+        view.addSubview(rsiLabel)
+        rsiLabel.topAnchor.constraint(equalTo: labelOuterLeading.bottomAnchor, constant: 16).isActive = true
+        rsiLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        
+        view.addSubview(rsiLineChartView)
+        rsiLineChartView.topAnchor.constraint(equalTo: labelOuterLeading.bottomAnchor, constant: 32).isActive = true
+        rsiLineChartView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        rsiLineChartView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        rsiLineChartView.trailingAnchor.constraint(equalTo: labelOuterLeading.leadingAnchor, constant: -5).isActive = true
+        rsiLineChartView.backgroundColor = .red
+        let rsiDatas = calculateRSI(data: allValues, period: 13)
+        rsiLineChartView.data = rsiDatas
+    }
+    
+    func calculateRSI(data: [Float], period: Int) -> [Float] {
+        var rsiValues: [Float] = []
+        
+        if data.count < period {
+            print("Veri sayısı, RSI periyodundan daha az olduğu için RSI hesaplanamaz.")
+            return rsiValues
+        }
+        
+        var gainSum: Float = 0
+        var lossSum: Float = 0
+        for i in 1..<period {
+            let change = data[i] - data[i - 1]
+            if change > 0 {
+                gainSum += change
+            } else {
+                lossSum += abs(change)
+            }
+        }
+        let initialAvgGain = gainSum / Float(period)
+        let initialAvgLoss = lossSum / Float(period)
+        
+        var avgGain = initialAvgGain
+        var avgLoss = initialAvgLoss
+        
+        for i in period..<data.count {
+            let change = data[i] - data[i - 1]
+            if change > 0 {
+                avgGain = (avgGain * Float(period - 1) + change) / Float(period)
+                avgLoss = (avgLoss * Float(period - 1)) / Float(period)
+            } else {
+                avgGain = (avgGain * Float(period - 1)) / Float(period)
+                avgLoss = (avgLoss * Float(period - 1) + abs(change)) / Float(period)
+            }
+            
+            let rs = avgGain / avgLoss
+            let rsi = 100 - (100 / (1 + rs))
+            rsiValues.append(rsi)
+        }
+        
+        return rsiValues
+    }
+
+
     
     func setDetails(){
         guard let singleCoin = singleCoin else{return}
@@ -338,9 +464,18 @@ class DetailViewController: UIViewController {
         let formattedPriceUsd = String(format: "%.1f", priceFloat)
         priceLabelUsd.text = formattedPriceUsd
         
-        changeLabel.text = singleCoin.change
+        guard let coinChange = singleCoin.change else{
+            return
+        }
         
-
+        if Float(coinChange) ?? 0 > 0{
+            changeLabel.textColor = AppColors.green
+        }else{
+            changeLabel.textColor = AppColors.red
+        }
+        
+        changeLabel.text = (singleCoin.change ?? "no value") + " %"
+    
         let sparklineDoubles = singleCoin.sparkline?.compactMap { Double($0) }
 
         guard let maxPriceDouble = sparklineDoubles?.max(),
@@ -353,6 +488,19 @@ class DetailViewController: UIViewController {
         low24hValueLabel.text = formattedLowestPrice
         marketCapValue.text = singleCoin.marketCap?.formatVolume()
         vol24hUsdtValueLabel.text = singleCoin.the24HVolume?.formatVolume()
+        
+        guard let iconUrl = singleCoin.iconURL else{return}
+        if iconUrl.contains("svg") {
+            let newIconUrl = iconUrl.replacingOccurrences(of: "svg", with: "png")
+                if let imageUrl = URL(string: newIconUrl) {
+                cryptoImageView.kf.setImage(with: imageUrl)
+            }
+        }else{
+            if let imageUrl = URL(string: iconUrl) {
+                cryptoImageView.kf.setImage(with: imageUrl)
+            }
+        }
+       
     }
     
     func saveCoin(){
@@ -370,6 +518,8 @@ class DetailViewController: UIViewController {
         }catch let error as NSError{
             print("Veri Kaydedilirken hata oluştu \(error.localizedDescription)")
         }
+        
+        
         
     }
     
@@ -417,8 +567,6 @@ class DetailViewController: UIViewController {
         }
     }
 
-    
-    
     func setupViews(){
         var statusBarHeight: CGFloat = 0
         if #available(iOS 13.0, *) {
@@ -438,9 +586,15 @@ class DetailViewController: UIViewController {
         backButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
         backButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
+        topNavigationView.addSubview(cryptoImageView)
+        cryptoImageView.leadingAnchor.constraint(equalTo: backButton.trailingAnchor, constant: 16).isActive = true
+        cryptoImageView.centerYAnchor.constraint(equalTo: backButton.centerYAnchor).isActive = true
+        cryptoImageView.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        cryptoImageView.widthAnchor.constraint(equalToConstant: 25).isActive = true
+
         topNavigationView.addSubview(cryptoNameLabel)
         cryptoNameLabel.centerYAnchor.constraint(equalTo: backButton.centerYAnchor).isActive = true
-        cryptoNameLabel.leadingAnchor.constraint(equalTo: backButton.trailingAnchor, constant: 16).isActive = true
+        cryptoNameLabel.leadingAnchor.constraint(equalTo: cryptoImageView.trailingAnchor, constant: 12).isActive = true
         
         topNavigationView.addSubview(starButton)
         starButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 3).isActive = true
@@ -494,7 +648,18 @@ class DetailViewController: UIViewController {
         candleChartButton.trailingAnchor.constraint(equalTo: lineChartButton.leadingAnchor, constant: -16).isActive = true
         candleChartButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
         candleChartButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+    
+        view.addSubview(buttonStackView)
+        buttonStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40).isActive = true
+        buttonStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
 
+        buttonStackView.addArrangedSubview(buyButton)
+        buttonStackView.addArrangedSubview(sellButton)
+        
+        buyButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        buyButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        sellButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        sellButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
     }
 
     func calculatePositions(data: [Float], viewHeight: CGFloat) -> [CGFloat] {
@@ -534,7 +699,6 @@ class DetailViewController: UIViewController {
             } else {
                 height = 0 // son eleman, yani en üstteki eleman
             }
-            
             positionsAndHeights.append((position: position, height: height))
         }
         
@@ -544,6 +708,12 @@ class DetailViewController: UIViewController {
     var primaryPercent: Float = 0.0
 
     private func setupCandleChart(data: [Float]){
+        
+        
+        
+        view.addSubview(chartLabel)
+        chartLabel.topAnchor.constraint(equalTo: candleChartButton.bottomAnchor, constant: 16).isActive = true
+        chartLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
 
         let maxFloat = data.max() ?? 0
         let minFloat = data.min() ?? 0
@@ -567,7 +737,7 @@ class DetailViewController: UIViewController {
         for i in 0...4 {
             let value = startValue - averageValue * Float(i)
             let label = UILabel()
-            label.text = String(format: "%.2f", value)
+            label.text = String(format: "%.3f", value)
             label.font = UIFont.systemFont(ofSize: 12)
             view.addSubview(label)
             label.backgroundColor = .clear
@@ -577,19 +747,18 @@ class DetailViewController: UIViewController {
             NSLayoutConstraint.activate([
                 label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
                 label.heightAnchor.constraint(equalToConstant: 12),
-                label.topAnchor.constraint(equalTo: lineChartButton.bottomAnchor, constant: CGFloat(i) * 80 + 16)
+                label.topAnchor.constraint(equalTo: chartLabel.bottomAnchor, constant: CGFloat(i) * (0.33*view.frame.size.height)/4 + 12)
             ])
             labelOuter = label
+            labelOuterLeading = label
         }
-  
+ 
+        
         view.addSubview(candleCharView)
-        candleCharView.topAnchor.constraint(equalTo: lineChartButton.bottomAnchor, constant: 16).isActive = true
-        candleCharView.heightAnchor.constraint(equalToConstant: 330).isActive = true
+        candleCharView.topAnchor.constraint(equalTo: chartLabel.bottomAnchor, constant: 0).isActive = true
+        candleCharView.heightAnchor.constraint(equalToConstant: 0.33*view.frame.size.height).isActive = true
         candleCharView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         candleCharView.trailingAnchor.constraint(equalTo: labelOuter.leadingAnchor, constant: -5).isActive = true
-        
-        let maxValue = data.max() ?? 0
-        let minValue = data.min() ?? 0
         
         var primaryView = UIView()
         
@@ -601,13 +770,13 @@ class DetailViewController: UIViewController {
             }
         }
         
-        let positionsAndHeights = calculatePositionsAndHeights(data: data, viewHeight: 300)
+        let positionsAndHeights = calculatePositionsAndHeights(data: data, viewHeight: 0.33*view.frame.size.height)
         var heights = [Int]()
+        var positions = [Float]()
         for (index, item) in positionsAndHeights.enumerated() {
             let absoluteHeight = Int(abs(item.height))
-               print("Item \(index + 1): position \(item.position), height \(absoluteHeight)")
-                
                heights.append(absoluteHeight)
+                positions.append(Float(item.position))
         }
         
         
@@ -616,8 +785,8 @@ class DetailViewController: UIViewController {
             candleView.translatesAutoresizingMaskIntoConstraints = false
             let percentDiff = (data[i + 1] - data[i]) / data[i] * 100
             
-            let candleWidth: CGFloat = (view.frame.size.width - 125)/35
-            let position = 300 - (calculatePositions(data: data, viewHeight: 300).first ?? 0)
+            let candleWidth: CGFloat = (view.frame.size.width - 125)/37
+            let position = 0.33*view.frame.size.height - (calculatePositions(data: data, viewHeight: 0.33*view.frame.size.height ).first ?? 0)
             candleCharView.addSubview(candleView)
             if heights[i] == 0{
                 heights[i] = 1
@@ -678,7 +847,7 @@ class DetailViewController: UIViewController {
 
 
 class LineChartView: UIView {
-    
+
     var data: [Float] = [] {
         didSet {
             setNeedsDisplay()
@@ -687,9 +856,8 @@ class LineChartView: UIView {
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-        
+                
         guard let context = UIGraphicsGetCurrentContext() else { return }
-        
         UIColor(red: 38/255, green: 41/255, blue: 48/255, alpha: 1).setFill()
         context.fill(rect)
         
@@ -705,12 +873,10 @@ class LineChartView: UIView {
         let stepX = width / CGFloat(data.count - 1)
         let stepY = height / valueRange
         
-        // Line'ı çiz
         UIColor(red: 255/255, green: 206/255, blue: 47/255, alpha: 1).setStroke()
         let linePath = UIBezierPath()
         linePath.lineWidth = 2.0
         
-        // Alt kısmı dolduracak poligon için başlangıç noktası
         linePath.move(to: CGPoint(x: 0, y: height))
         
         for (index, value) in data.enumerated() {
@@ -722,9 +888,7 @@ class LineChartView: UIView {
             } else {
                 linePath.addLine(to: CGPoint(x: x, y: y))
             }
-            
         }
-
         linePath.stroke()
         linePath.addLine(to: CGPoint(x: rect.width, y: height))
         linePath.addLine(to: CGPoint(x: 0, y: height))
@@ -733,5 +897,3 @@ class LineChartView: UIView {
     }
 
 }
-
-
