@@ -301,7 +301,6 @@ class DetailViewController: UIViewController {
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = AppColors.green
         button.layer.cornerRadius = 4
-        button.addTarget(self, action: #selector(lineChartClicked), for: .touchUpInside)
         return button
     }()
     
@@ -313,7 +312,6 @@ class DetailViewController: UIViewController {
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = AppColors.red
         button.layer.cornerRadius = 4
-        button.addTarget(self, action: #selector(lineChartClicked), for: .touchUpInside)
         return button
     }()
     
@@ -566,9 +564,10 @@ class DetailViewController: UIViewController {
             print("Coin silinirken hata oluştu: \(error.localizedDescription)")
         }
     }
+    var statusBarHeight: CGFloat = 0
+
 
     func setupViews(){
-        var statusBarHeight: CGFloat = 0
         if #available(iOS 13.0, *) {
             statusBarHeight = UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
         } else {
@@ -581,7 +580,7 @@ class DetailViewController: UIViewController {
         topNavigationView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         
         topNavigationView.addSubview(backButton)
-        backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5).isActive = true
+        backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
         backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         backButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
         backButton.heightAnchor.constraint(equalToConstant: 25).isActive = true

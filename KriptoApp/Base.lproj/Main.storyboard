@@ -22,12 +22,13 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1057.2519083969464" y="-27.464788732394368"/>
+            <point key="canvasLocation" x="2112" y="-413"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Item-->
         <scene sceneID="exu-Au-SFm">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="WZj-t9-twn" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="a4R-2b-nnW"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="DeQ-Ky-vNO">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
@@ -40,7 +41,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r2q-cp-vyD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="130.53435114503816" y="-27.464788732394368"/>
+            <point key="canvasLocation" x="1185" y="-413"/>
         </scene>
     </scenes>
     <resources>
