@@ -102,36 +102,24 @@ class CryptoCell: UICollectionViewCell {
         percentChangeLabel.topAnchor.constraint(equalTo: cryptoSymbolLabel.topAnchor, constant: 4).isActive = true
         percentChangeLabel.bottomAnchor.constraint(equalTo: dayVolumeLabel.bottomAnchor, constant: -4).isActive = true
         percentChangeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
-        percentChangeLabel.widthAnchor.constraint(equalToConstant: 90).isActive = true
-        
+        percentChangeLabel.widthAnchor.constraint(equalToConstant: 85).isActive = true
         
         contentView.addSubview(stackViewPrices)
         stackViewPrices.topAnchor.constraint(equalTo: percentChangeLabel.topAnchor, constant: 0).isActive = true
         stackViewPrices.trailingAnchor.constraint(equalTo: percentChangeLabel.leadingAnchor, constant: -20).isActive = true
         stackViewPrices.addArrangedSubview(firstPriceLabel)
         stackViewPrices.addArrangedSubview(secondPriceLabel)
-        
-
-        
-       /* contentView.addSubview(stackViewPrices)
-        stackViewPrices.addArrangedSubview(firstPriceLabel)
-        stackViewPrices.addArrangedSubview(secondPriceLabel)*/
-
-
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
-    
     func configure(coin: Coin?){
     
         guard let coin = coin else{return}
         
         cryptoSymbolLabel.text = coin.symbol
-       // dayVolumeLabel.text = formatVolume(coin.the24HVolume)
         dayVolumeLabel.text = coin.the24HVolume?.formatVolume()
         
         guard let change = coin.change, let changeValue = Float(change) else { return }
@@ -146,10 +134,6 @@ class CryptoCell: UICollectionViewCell {
         
         guard let price = coin.price, let priceFloat = Float(price) else { return }
 
-        print(price)
-        
-
-        
         let numberString = price
 
         if let dotRange = numberString.range(of: ".") {
@@ -173,11 +157,7 @@ class CryptoCell: UICollectionViewCell {
                 let formattedPrice2 = String(format: "%.2f", priceFloat)
                 secondPriceLabel.text = formattedPrice2 + " $"
             }
-            
         }
-        
-      
-        
     }
     
 }

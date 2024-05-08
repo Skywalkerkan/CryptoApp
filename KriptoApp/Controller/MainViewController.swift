@@ -85,6 +85,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
               self.collectionViewCrypto.reloadData()
           }
         deleteButton.isHidden = true
+        arrowImageView.isHidden = true
     }
     
     var cryptoResult: CryptoResult?
@@ -132,7 +133,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
                if let indexPath = collectionViewCrypto.indexPathForItem(at: touchPoint),
                   let cell = collectionViewCrypto.cellForItem(at: indexPath){
                    
-                   cell.backgroundColor = UIColor(red: 25/255, green: 24/255, blue: 35/255, alpha: 1)
+                 
                    let cellFrameInSuperview = collectionViewCrypto.convert(cell.frame, to: self.view)
                    if isFavActive{
                        print("Uzun basıldı! Hücre indeksi: \(indexPath.item)")
@@ -142,6 +143,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
                        deleteButton.transform = CGAffineTransform(translationX: view.frame.width/2-40, y: cellFrameInSuperview.origin.y-30)
                        arrowImageView.isHidden = false
                        arrowImageView.transform = CGAffineTransform(translationX: view.frame.width/2-10, y: cellFrameInSuperview.origin.y-5)
+                       cell.backgroundColor = UIColor(red: 25/255, green: 24/255, blue: 35/255, alpha: 1)
                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                             UIView.animate(withDuration: 0.2) {
                                 cell.backgroundColor = .clear
@@ -243,7 +245,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
         collectionViewCrypto.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 0).isActive = true
         collectionViewCrypto.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         collectionViewCrypto.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        collectionViewCrypto.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        collectionViewCrypto.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         view.addSubview(deleteButton)
         deleteButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
         view.addSubview(arrowImageView)
@@ -435,7 +437,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         if collectionView == collectionViewCrypto {
-            return CGSize(width: collectionView.frame.size.width, height: 170)
+            return CGSize(width: collectionView.frame.size.width, height: 165)
         } else {
             return CGSize.zero
         }

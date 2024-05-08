@@ -213,7 +213,7 @@ class MarketViewController: UIViewController {
         collectionViewCrypto.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40).isActive = true
         collectionViewCrypto.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         collectionViewCrypto.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        collectionViewCrypto.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        collectionViewCrypto.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
 
         //Name
         view.addSubview(stackViewNameImages)

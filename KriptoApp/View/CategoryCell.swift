@@ -29,9 +29,6 @@ class CategoryCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-       
-        
         setupViews()
     }
     
@@ -40,7 +37,6 @@ class CategoryCell: UICollectionViewCell {
         categoryNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
         categoryNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         categoryNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-
 
         contentView.addSubview(bottomLine)
         bottomLine.topAnchor.constraint(equalTo: categoryNameLabel.bottomAnchor, constant: 4).isActive = true

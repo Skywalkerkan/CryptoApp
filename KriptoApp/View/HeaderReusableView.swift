@@ -126,12 +126,10 @@ class HeaderReusableView: UICollectionReusableView {
     private func setupViews() {
         addSubview(headerView)
         
-        
         headerView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         headerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         headerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         headerView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        
         
         headerView.addSubview(balanceStackView)
         balanceStackView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 0).isActive = true
@@ -169,13 +167,11 @@ class HeaderReusableView: UICollectionReusableView {
         priceLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 0).isActive = true
         priceLabel.trailingAnchor.constraint(equalTo: changeLabel.leadingAnchor, constant: -45).isActive = true
         
-
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(CategoryCell.self, forCellWithReuseIdentifier: "cell3")
     }
 }
-
 
 extension HeaderReusableView: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -203,13 +199,11 @@ extension HeaderReusableView: UICollectionViewDataSource, UICollectionViewDelega
         if let cell = collectionView.cellForItem(at: indexPath) as? CategoryCell {
             cell.bottomLine.isHidden = false
             cell.categoryNameLabel.textColor = .white
-            selectedCategoryIndex = indexPath // Seçilen hücrenin indexPath'ini sakla
+            selectedCategoryIndex = indexPath
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         }
-        
-        
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
                 return CGSize(width: 50, height: 50)

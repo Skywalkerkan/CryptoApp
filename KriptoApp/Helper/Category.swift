@@ -7,11 +7,10 @@
 
 import Foundation
 
-
 enum Category: String {
-    case Favorites = "Favorites"
-    case Gainers = "Gainers"
-    case Losers = "Losers"
+    case Favorites
+    case Gainers
+    case Losers
     case dayVol = "24h Volume"
     case marketCap = "Market Cap"
 }

@@ -21,7 +21,4 @@ final class CryptoLogic: CryptoProtocol{
                                             decodeType: CryptoResult.self,
                                             completion: completion)
     }
-    
-    
-    
 }

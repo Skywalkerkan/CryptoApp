@@ -26,7 +26,6 @@ enum Router: URLRequestConvertible {
         }
     }
     
-    
     var encoding: ParameterEncoding {
         JSONEncoding.default
     }
