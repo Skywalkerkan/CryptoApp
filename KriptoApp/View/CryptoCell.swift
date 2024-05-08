@@ -146,12 +146,37 @@ class CryptoCell: UICollectionViewCell {
         
         guard let price = coin.price, let priceFloat = Float(price) else { return }
 
-        let formattedPrice = String(format: "%.4f", priceFloat)
-        firstPriceLabel.text = formattedPrice
+        print(price)
         
-        let formattedPrice2 = String(format: "%.2f", priceFloat)
-        secondPriceLabel.text = formattedPrice2 + " $"
 
+        
+        let numberString = price
+
+        if let dotRange = numberString.range(of: ".") {
+            let fractionPart = numberString[dotRange.upperBound...]
+            let fractionDigits = Array(fractionPart)
+            var count = 0
+            for digit in fractionDigits {
+                if digit != "0" {
+                    break
+                }
+                count += 1
+            }
+            if count > 2{
+                let formattedPrice = String(format: "%.\(count+4)f", priceFloat)
+                firstPriceLabel.text = formattedPrice
+                let formattedPrice2 = String(format: "%.\(count+2)f", priceFloat)
+                secondPriceLabel.text = formattedPrice2 + " $"
+            }else{
+                let formattedPrice = String(format: "%.4f", priceFloat)
+                firstPriceLabel.text = formattedPrice
+                let formattedPrice2 = String(format: "%.2f", priceFloat)
+                secondPriceLabel.text = formattedPrice2 + " $"
+            }
+            
+        }
+        
+      
         
     }
     

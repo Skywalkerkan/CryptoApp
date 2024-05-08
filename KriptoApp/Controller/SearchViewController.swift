@@ -60,6 +60,25 @@ class SearchViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
+    let noDataImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "nodata")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isHidden = true
+        return imageView
+    }()
+    
+    let noDataLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No data found"
+        label.isHidden = true
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 16, weight: .bold)
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     var statusBarHeight: CGFloat = 0
 
     override func viewDidLoad() {
@@ -94,8 +113,6 @@ class SearchViewController: UIViewController {
         searchCollectionView.register(CryptoCell.self, forCellWithReuseIdentifier: "cell")
     }
     
-    
-    
     func animateSearchBar(){
         if #available(iOS 13.0, *) {
             statusBarHeight = UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
@@ -121,7 +138,7 @@ class SearchViewController: UIViewController {
     func setupViews(){
         view.addSubview(searchBar)
         searchBar.delegate = self
-        self.searchBar.frame = CGRect(x:32, y:self.statusBarHeight, width:300, height:60)
+        self.searchBar.frame = CGRect(x:48, y:self.statusBarHeight, width:300, height:60)
         
         view.addSubview(cancelBottomViewButton)
         cancelBottomViewButton.topAnchor.constraint(equalTo: view.topAnchor, constant: statusBarHeight+22).isActive = true
@@ -132,8 +149,18 @@ class SearchViewController: UIViewController {
         searchCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         searchCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         searchCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-
         
+        
+        view.addSubview(noDataLabel)
+        noDataLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        noDataLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+
+        view.addSubview(noDataImage)
+        noDataImage.topAnchor.constraint(equalTo: noDataLabel.bottomAnchor, constant: 8).isActive = true
+        noDataImage.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 8).isActive = true
+        noDataImage.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        noDataImage.widthAnchor.constraint(equalToConstant: 50).isActive = true
+
     }
 }
 
@@ -169,6 +196,8 @@ extension SearchViewController: UISearchBarDelegate {
         if trimmedSearchText.isEmpty {
             // Arama metni boşsa, tüm kripto paraları göster
             searchResult = cryptoResult
+            noDataLabel.isHidden = true
+            noDataImage.isHidden = true
         } else {
             guard let coins = cryptoResult?.data.coins else {
                 return
@@ -184,6 +213,15 @@ extension SearchViewController: UISearchBarDelegate {
             }
             
             // Filtrelenmiş sonuçları güncelle
+            
+            if filteredCoins.isEmpty{
+                noDataLabel.isHidden = false
+                noDataImage.isHidden = false
+            }else{
+                noDataLabel.isHidden = true
+                noDataImage.isHidden = true
+            }
+            
             searchResult?.data.coins = filteredCoins
         }
         
@@ -191,4 +229,5 @@ extension SearchViewController: UISearchBarDelegate {
            self.searchCollectionView.reloadData()
         }
     }
+    
 }

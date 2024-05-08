@@ -78,7 +78,7 @@ class HeaderReusableView: UICollectionReusableView {
     let seperator: UIView = {
        let view = UIView()
         view.backgroundColor = .lightGray
-        view.alpha = 0.5
+        view.alpha = 1
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()

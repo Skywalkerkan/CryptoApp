@@ -4,9 +4,7 @@ import UIKit
 import CoreData
 
 class MainViewController: UIViewController, UIScrollViewDelegate{
-    
-   // var lineChartView: LineChartView!
-    
+        
     var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.translatesAutoresizingMaskIntoConstraints = false
@@ -25,23 +23,19 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
         print("güncelleniyor")
         return searchBar
     }()
-
-
+    
+    let binanceImageView: UIImageView = {
+       let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "binance")
+        return imageView
+    }()
     
     var collectionViewCrypto: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        return collectionView
-    }()
-    
-    let bottomCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = UIColor(red: 38/255, green: 41/255, blue: 48/255, alpha: 1)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
@@ -59,45 +53,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
         imageView.isHidden = true
         return imageView
     }()
-    
-    let bottomView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red: 38/255, green: 41/255, blue: 48/255, alpha: 1)
-        view.isHidden = true
-        view.alpha = 0.3
-        view.layer.zPosition = 1
-        return view
-    }()
-    
-    lazy var cancelBottomViewButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Cancel", for: .normal)
-        button.setTitleColor(.systemYellow, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .light)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(cancelClicked), for: .touchUpInside)
-        return button
-    }()
-    
-    
-    @objc func cancelClicked() {
-        // Animasyon
-        self.searchBar.resignFirstResponder()
-        
-        UIView.animate(withDuration: 0.3) {
-            self.bottomView.transform = CGAffineTransform(translationX: self.view.frame.width, y: 0)
-            self.searchBar.frame = CGRect(x:32, y:self.statusBarHeight, width:300, height:60)
-            // Layout güncelle
-            self.view.layoutIfNeeded()
-        } completion: { _ in
-            print("ok")
-            self.bottomView.transform = .identity
-            self.bottomView.isHidden = true
-            self.bottomView.alpha = 0.8
-            self.searchBar.text = ""
-        }
-    }
     
     lazy var deleteButton: UIButton = {
         let button = UIButton(type: .system)
@@ -133,7 +88,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
     }
     
     var cryptoResult: CryptoResult?
-    var searchResult: CryptoResult?
     var favCryptos = [Coin]()
     var isFavActive: Bool = false
     var categories = ["Favorites", "Hot", "Gainers", "Losers", "24h Volume", "Market Cap"]
@@ -156,10 +110,8 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
             switch result{
             case .success(let cryptoResult):
                 self.cryptoResult = cryptoResult
-                self.searchResult = cryptoResult
                 DispatchQueue.main.async {
                     self.collectionViewCrypto.reloadData()
-                    self.bottomCollectionView.reloadData()
                 }
             case .failure(let error):
                 print(error.localizedDescription)
@@ -277,13 +229,16 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
         searchBar.delegate = self
         view.addSubview(searchBar)
         searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -4).isActive = true
-        searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32).isActive = true
-       // searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -72).isActive = true
+        searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 48).isActive = true
         searchBar.widthAnchor.constraint(equalToConstant: 200).isActive = true
         searchBar.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
-        print("searchbar")
-        
+        view.addSubview(binanceImageView)
+        binanceImageView.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor).isActive = true
+        binanceImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        binanceImageView.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        binanceImageView.widthAnchor.constraint(equalToConstant: 25).isActive = true
+
         backgroundView.addSubview(collectionViewCrypto)
         collectionViewCrypto.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 0).isActive = true
         collectionViewCrypto.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
@@ -295,36 +250,13 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
         arrowImageView.widthAnchor.constraint(equalToConstant: 20).isActive = true
         arrowImageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
 
-        view.addSubview(bottomView)
-        bottomView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
-        bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
-        bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        bottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        
-        bottomView.addSubview(cancelBottomViewButton)
-        cancelBottomViewButton.topAnchor.constraint(equalTo: view.topAnchor, constant: statusBarHeight+18).isActive = true
-        cancelBottomViewButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-        
-        
-        bottomView.addSubview(bottomCollectionView)
-        bottomCollectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 16).isActive = true
-        bottomCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        bottomCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        bottomCollectionView.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor).isActive = true
-
-        
     }
     
     private func collectionViewSetup(){
         collectionViewCrypto.delegate = self
         collectionViewCrypto.dataSource = self
         collectionViewCrypto.register(CryptoCell.self, forCellWithReuseIdentifier: "cell")
-        
         collectionViewCrypto.register(HeaderReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderReusableView.reuseIdentifier)
-        
-        bottomCollectionView.delegate = self
-        bottomCollectionView.dataSource = self
-        bottomCollectionView.register(CryptoCell.self, forCellWithReuseIdentifier: "cell2")
     }
     
 }
@@ -343,10 +275,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 destinationVC.singleCoin = cryptoResult?.data.coins[indexPath.row]
             }
             navigationController?.pushViewController(destinationVC, animated: true)
-        case bottomCollectionView:
-            let destinationVC = DetailViewController()
-            destinationVC.singleCoin = searchResult?.data.coins[indexPath.row]
-            navigationController?.pushViewController(destinationVC, animated: true)
         default:
             break
         }
@@ -354,7 +282,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func sortCryptos(cryptoResult: CryptoResult?, category: Category) {
         
-        print(searchResult?.data.coins)
         guard var result = cryptoResult else {
             return
         }
@@ -446,8 +373,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             }else{
                 return cryptoResult?.data.coins.count ?? 0
             }
-        case bottomCollectionView:
-            return searchResult?.data.coins.count ?? 0
         default:
             return 0
         }
@@ -467,10 +392,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             }
             
             return cell
-        case bottomCollectionView:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell2", for: indexPath) as! CryptoCell
-            cell.configure(coin: searchResult?.data.coins[indexPath.row])
-            return cell
         default:
             return UICollectionViewCell()
         }
@@ -480,8 +401,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         switch collectionView{
         case collectionViewCrypto:
-            return CGSize(width: view.frame.size.width, height: 60)
-        case bottomCollectionView:
             return CGSize(width: view.frame.size.width, height: 60)
         default:
             return CGSize()
@@ -532,54 +451,7 @@ extension MainViewController: UISearchBarDelegate {
         let destinationVC = SearchViewController()
         destinationVC.cryptoResult = cryptoResult
         navigationController?.pushViewController(destinationVC, animated: false)
-                        
-        /*searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -150).isActive = false
-
-        let newtrai = searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -72)
-        newtrai.isActive = true
-            
-        // Animasyon
-        UIView.animate(withDuration: 0.3) {
-            self.bottomView.isHidden = false
-            self.bottomView.alpha = 1
-            
-            self.searchBar.frame = CGRect(x:8, y:self.statusBarHeight+5, width:300, height:60)
-            
-            self.view.layoutIfNeeded()
-        }
-        */
         return true
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-      
-        
-        let trimmedSearchText = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        if trimmedSearchText.isEmpty {
-            // Arama metni boşsa, tüm kripto paraları göster
-            searchResult = cryptoResult
-        } else {
-            guard let coins = cryptoResult?.data.coins else {
-                return
-            }
-            
-            // Filtreleme işlemi
-            let filteredCoins = coins.filter { coin in
-                if let name = coin.symbol {
-                    print(name)
-                    return name.localizedCaseInsensitiveContains(trimmedSearchText)
-                }
-                return false
-            }
-            
-            // Filtrelenmiş sonuçları güncelle
-            searchResult?.data.coins = filteredCoins
-        }
-        
-        DispatchQueue.main.async {
-            self.bottomCollectionView.reloadData()
-        }
     }
 }
 
