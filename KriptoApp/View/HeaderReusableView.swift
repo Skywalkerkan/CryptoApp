@@ -77,8 +77,8 @@ class HeaderReusableView: UICollectionReusableView {
     
     let seperator: UIView = {
        let view = UIView()
-        view.backgroundColor = .lightGray
-        view.alpha = 1
+        view.backgroundColor = .gray
+        view.alpha = 0.5
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -110,8 +110,8 @@ class HeaderReusableView: UICollectionReusableView {
         return label
     }()
     
-    var categories = ["Favorites", "Hot", "Gainers", "Losers", "24h Volume", "Market Cap"]
-    var selectedCategoryIndex: IndexPath? = [0, 1]
+    var categories = ["Favorites", "Gainers", "Losers", "24h Volume", "Market Cap"]
+    var selectedCategoryIndex: IndexPath? = [0, 0]
 
     
     override init(frame: CGRect) {
@@ -147,7 +147,7 @@ class HeaderReusableView: UICollectionReusableView {
         seperator.topAnchor.constraint(equalTo: usdStackView.bottomAnchor, constant: 16).isActive = true
         seperator.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
         seperator.trailingAnchor.constraint(equalTo: headerView.trailingAnchor).isActive = true
-        seperator.heightAnchor.constraint(equalToConstant: 0.2).isActive = true
+        seperator.heightAnchor.constraint(equalToConstant: 1).isActive = true
 
         headerView.addSubview(collectionView)
         collectionView.topAnchor.constraint(equalTo: seperator.bottomAnchor, constant: 10).isActive = true
@@ -180,6 +180,10 @@ extension HeaderReusableView: UICollectionViewDataSource, UICollectionViewDelega
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell3", for: indexPath) as! CategoryCell
+        if categories[indexPath.row] == "Favorites"{
+            cell.bottomLine.isHidden = false
+            cell.categoryNameLabel.textColor = .white
+        }
         cell.categoryNameLabel.text = categories[indexPath.row]
         
         return cell
@@ -187,7 +191,7 @@ extension HeaderReusableView: UICollectionViewDataSource, UICollectionViewDelega
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print(categories[indexPath.row])
-        var chosenCategory = categories[indexPath.row]
+        let chosenCategory = categories[indexPath.row]
         NotificationCenter.default.post(name: Notification.Name("CustomNotification"), object: chosenCategory)
         
         if let previousIndex = selectedCategoryIndex {

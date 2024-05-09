@@ -9,6 +9,16 @@ import UIKit
 
 class MarketViewController: UIViewController {
 
+    let activityIndicatorView: UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView()
+        view.startAnimating()
+        view.hidesWhenStopped = true
+        view.color = .white
+        view.style = .large
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     var collectionViewCrypto: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -193,11 +203,18 @@ class MarketViewController: UIViewController {
                 self.sortedResult = cryptoResult
                 DispatchQueue.main.async {
                     self.collectionViewCrypto.reloadData()
+                    self.activityIndicatorView.stopAnimating()
                 }
             case .failure(let error):
                 print(error.localizedDescription)
             }
         }
+        
+        view.addSubview(activityIndicatorView)
+        activityIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        activityIndicatorView.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        activityIndicatorView.widthAnchor.constraint(equalToConstant: 120).isActive = true
     }
     
     func setupCollectionView(){

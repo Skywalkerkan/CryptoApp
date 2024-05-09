@@ -24,9 +24,9 @@ class SearchViewController: UIViewController {
               ]
               searchTextField.attributedPlaceholder = NSAttributedString(string: "Megadrop", attributes: attributes)
           }
+        searchBar.searchTextField.textColor = .white
         searchBar.searchTextField.leftView?.tintColor = .gray
         searchBar.layer.zPosition = 2
-        print("güncelleniyor")
         return searchBar
     }()
 
@@ -126,10 +126,11 @@ class SearchViewController: UIViewController {
         UIView.animate(withDuration: 0.2, animations: {
             self.searchBar.frame = CGRect(x: 8, y: self.statusBarHeight+10, width: 200, height: 60)
         }) { _ in
-            UIView.animate(withDuration: 0.4, animations: {
+            self.searchBar.becomeFirstResponder()
+
+            UIView.animate(withDuration: 0.2, animations: {
                 self.searchBar.frame = CGRect(x: 8, y: self.statusBarHeight+10, width: 300, height: 60)
             }){ _ in
-                self.searchBar.becomeFirstResponder()
             }
         }
     }

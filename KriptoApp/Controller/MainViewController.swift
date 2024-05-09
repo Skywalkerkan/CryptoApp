@@ -54,6 +54,25 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
         return imageView
     }()
     
+    let noDataImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "nodata")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isHidden = true
+        return imageView
+    }()
+    
+    let noDataLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No Favorites found"
+        label.isHidden = true
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 16, weight: .bold)
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     lazy var deleteButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -91,7 +110,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
     var cryptoResult: CryptoResult?
     var favCryptos = [Coin]()
     var isFavActive: Bool = false
-    var categories = ["Favorites", "Hot", "Gainers", "Losers", "24h Volume", "Market Cap"]
     var coinIDs = [String]()
     var selectedCoinIndex: IndexPath = []
     var selectedId: String = ""
@@ -112,7 +130,13 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
             case .success(let cryptoResult):
                 self.cryptoResult = cryptoResult
                 DispatchQueue.main.async {
-                    self.collectionViewCrypto.reloadData()
+                    self.isFavActive = true
+                    self.sortCryptos(cryptoResult: cryptoResult, category: .Favorites)
+                   // self.collectionViewCrypto.reloadData()
+                    if self.favCryptos.isEmpty{
+                        self.noDataImage.isHidden = false
+                        self.noDataLabel.isHidden = false
+                    }
                 }
             case .failure(let error):
                 print(error.localizedDescription)
@@ -252,6 +276,14 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
         arrowImageView.widthAnchor.constraint(equalToConstant: 20).isActive = true
         arrowImageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
 
+        view.addSubview(noDataLabel)
+        noDataLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        noDataLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        view.addSubview(noDataImage)
+        noDataImage.topAnchor.constraint(equalTo: noDataLabel.bottomAnchor, constant: 8).isActive = true
+        noDataImage.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 8).isActive = true
+        noDataImage.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        noDataImage.widthAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
     private func collectionViewSetup(){
@@ -305,8 +337,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 
                 favCryptos.append(contentsOf: filteredCoins)
             }
-            print(favCryptos.count)
-           
             
         case .Gainers:
             coins = coins.sorted { coin1, coin2 in
@@ -339,6 +369,13 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
             deleteButton.isHidden = true
             arrowImageView.isHidden = true
+            if isFavActive && favCryptos.isEmpty{
+                noDataImage.isHidden = false
+                noDataLabel.isHidden = false
+            }else{
+                noDataImage.isHidden = true
+                noDataLabel.isHidden = true
+            }
             result.data.coins = coins
             self.cryptoResult = result
             collectionViewCrypto.reloadData()
@@ -362,6 +399,15 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }catch let error as NSError{
             print("veriler geitirlirken hata oluştu \(error.localizedDescription)")
         }
+        
+        if isFavActive && coinIDs.isEmpty{
+            noDataImage.isHidden = false
+            noDataLabel.isHidden = false
+        }else{
+            noDataImage.isHidden = true
+            noDataLabel.isHidden = true
+        }
+        
     }
 
 

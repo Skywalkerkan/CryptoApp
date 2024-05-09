@@ -120,7 +120,7 @@ class DetailViewController: UIViewController {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
         label.text = "≈ $2.43"
         return label
     }()
@@ -128,7 +128,7 @@ class DetailViewController: UIViewController {
     let changeLabel: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
         label.text = "+10.11%"
         label.textColor = .green
         return label
@@ -146,8 +146,8 @@ class DetailViewController: UIViewController {
     let high24hLabel: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
-        label.text = "Market Cap"
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.text = "24h High"
         label.textColor = .gray
         return label
     }()
@@ -164,7 +164,7 @@ class DetailViewController: UIViewController {
     let low24hLabel: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.text = "24h Low"
         label.textColor = .gray
         return label
@@ -192,8 +192,8 @@ class DetailViewController: UIViewController {
     let vol24hCryptoLabel: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
-        label.text = "MarketCap"
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.text = "Market Cap"
         label.textColor = .gray
         return label
     }()
@@ -210,7 +210,7 @@ class DetailViewController: UIViewController {
     let vol24hUsdtLabel: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.text = "24h Vol(USDT)"
         label.textColor = .gray
         return label
@@ -323,6 +323,13 @@ class DetailViewController: UIViewController {
         return stackView
     }()
     
+    let detailView: UIView = {
+       let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .blue
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -330,17 +337,17 @@ class DetailViewController: UIViewController {
         let dataValues = dataStrings.compactMap { Float($0) }
 
         allValues = dataValues
-        
         view.backgroundColor = UIColor(red: 38/255, green: 41/255, blue: 48/255, alpha: 1)
-
+        
         setDetails()
         setupViews()
-        fetchCoins()
-         
-        setupCandleChart(data: dataValues)
-        setupRsiChartView()
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        fetchCoins()
+        setupCandleChart(data: allValues)
+        setupRsiChartView()
+        buttonSetup()
+    }
     
     var labelOuterLeading = UILabel()
     func setupLineChartView(dataValues: [Float]){
@@ -358,38 +365,12 @@ class DetailViewController: UIViewController {
 
         view.backgroundColor = UIColor(red: 38/255, green: 41/255, blue: 48/255, alpha: 1)
 
-        let startValue = maxFloat
-        let endValue = minFloat
-        let averageValue = (startValue - endValue) / 4
-
-        var labelOuter = UILabel()
-      /*  for i in 0...4 {
-            let value = startValue - averageValue * Float(i)
-            let label = UILabel()
-            label.text = String(format: "%.2f", value)
-            label.font = UIFont.systemFont(ofSize: 12)
-            view.addSubview(label)
-            label.backgroundColor = .clear
-            label.textAlignment = .right
-            label.textColor = .lightGray
-            label.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
-                label.heightAnchor.constraint(equalToConstant: 12),
-                label.topAnchor.constraint(equalTo: lineChartButton.bottomAnchor, constant: CGFloat(i) * 80 + 16)
-            ])
-            labelOuter = label
-            labelOuterLeading = label
-        }*/
-        
         view.addSubview(lineChartView)
         lineChartView.topAnchor.constraint(equalTo: chartLabel.bottomAnchor, constant: 24).isActive = true
         lineChartView.heightAnchor.constraint(equalToConstant: 0.33*view.frame.size.height).isActive = true
         lineChartView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         lineChartView.trailingAnchor.constraint(equalTo: labelOuterLeading.leadingAnchor, constant: -5).isActive = true
         lineChartView.data = dataValues
-        
-        
     }
     
     func setupRsiChartView(){
@@ -400,7 +381,7 @@ class DetailViewController: UIViewController {
         
         view.addSubview(rsiLineChartView)
         rsiLineChartView.topAnchor.constraint(equalTo: labelOuterLeading.bottomAnchor, constant: 32).isActive = true
-        rsiLineChartView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        rsiLineChartView.heightAnchor.constraint(equalToConstant: 0.07*view.frame.size.height).isActive = true
         rsiLineChartView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         rsiLineChartView.trailingAnchor.constraint(equalTo: labelOuterLeading.leadingAnchor, constant: -5).isActive = true
         rsiLineChartView.backgroundColor = .red
@@ -460,7 +441,7 @@ class DetailViewController: UIViewController {
         let formattedPriceUsdt = String(format: "%.2f", priceFloat)
         priceLabelUsdt.text = formattedPriceUsdt
         let formattedPriceUsd = String(format: "%.1f", priceFloat)
-        priceLabelUsd.text = formattedPriceUsd
+        priceLabelUsd.text = "$" + formattedPriceUsd
         
         guard let coinChange = singleCoin.change else{
             return
@@ -516,34 +497,34 @@ class DetailViewController: UIViewController {
         }catch let error as NSError{
             print("Veri Kaydedilirken hata oluştu \(error.localizedDescription)")
         }
-        
-        
-        
     }
     
-    func fetchCoins(){
+    func fetchCoins() {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.viewContext
-        
+        print("okey")
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoinData")
+        guard let coinID = singleCoin?.uuid else { return }
+        let predicate = NSPredicate(format: "id == %@", coinID)
+        fetchRequest.predicate = predicate
         fetchRequest.returnsObjectsAsFaults = false
 
-        do{
+        do {
             let coins = try context.fetch(fetchRequest)
-                   
-            for case let coin as NSManagedObject in coins {
-                if let id = coin.value(forKey: "id") as? String {
-                    if id == singleCoin?.uuid{
-                        isStarred = true
-                        starButton.setBackgroundImage(UIImage(systemName: "star.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.yellow), for: .normal)
-                    }
-                }
+
+            if let _ = coins.first as? NSManagedObject {
+                isStarred = true
+                starButton.setBackgroundImage(UIImage(systemName: "star.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.yellow), for: .normal)
+            } else {
+                isStarred = false
+                starButton.setBackgroundImage(UIImage(systemName: "star")?.withRenderingMode(.alwaysOriginal).withTintColor(.white), for: .normal)
             }
-            
-        }catch let error as NSError{
-            print("veriler geitirlirken hata oluştu \(error.localizedDescription)")
+
+        } catch let error as NSError {
+            print("Veriler getirilirken hata oluştu: \(error.localizedDescription)")
         }
     }
+
     
     func deleteCoin(withId id: String) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -647,18 +628,20 @@ class DetailViewController: UIViewController {
         candleChartButton.trailingAnchor.constraint(equalTo: lineChartButton.leadingAnchor, constant: -16).isActive = true
         candleChartButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
         candleChartButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+    }
     
+    func buttonSetup(){
         view.addSubview(buttonStackView)
-        buttonStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40).isActive = true
+        buttonStackView.topAnchor.constraint(equalTo: rsiLineChartView.bottomAnchor, constant: 24).isActive = true
         buttonStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
 
         buttonStackView.addArrangedSubview(buyButton)
         buttonStackView.addArrangedSubview(sellButton)
         
         buyButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        buyButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        buyButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         sellButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        sellButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        sellButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
     }
 
     func calculatePositions(data: [Float], viewHeight: CGFloat) -> [CGFloat] {
@@ -696,7 +679,7 @@ class DetailViewController: UIViewController {
                 let relativeHeight = valueDifference / totalRange
                 height = relativeHeight * viewHeight
             } else {
-                height = 0 // son eleman, yani en üstteki eleman
+                height = 0
             }
             positionsAndHeights.append((position: position, height: height))
         }
@@ -707,9 +690,7 @@ class DetailViewController: UIViewController {
     var primaryPercent: Float = 0.0
 
     private func setupCandleChart(data: [Float]){
-        
-        
-        
+
         view.addSubview(chartLabel)
         chartLabel.topAnchor.constraint(equalTo: candleChartButton.bottomAnchor, constant: 16).isActive = true
         chartLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
@@ -752,7 +733,6 @@ class DetailViewController: UIViewController {
             labelOuterLeading = label
         }
  
-        
         view.addSubview(candleCharView)
         candleCharView.topAnchor.constraint(equalTo: chartLabel.bottomAnchor, constant: 0).isActive = true
         candleCharView.heightAnchor.constraint(equalToConstant: 0.33*view.frame.size.height).isActive = true
@@ -761,18 +741,10 @@ class DetailViewController: UIViewController {
         
         var primaryView = UIView()
         
-        var constantHeight: Float = 0.0
-        for i in 0...9{
-            let percentDiff = (data[i + 1] - data[i]) / data[i] * 100
-            if percentDiff < 5{
-               constantHeight = 25
-            }
-        }
-        
         let positionsAndHeights = calculatePositionsAndHeights(data: data, viewHeight: 0.33*view.frame.size.height)
         var heights = [Int]()
         var positions = [Float]()
-        for (index, item) in positionsAndHeights.enumerated() {
+        for (_, item) in positionsAndHeights.enumerated() {
             let absoluteHeight = Int(abs(item.height))
                heights.append(absoluteHeight)
                 positions.append(Float(item.position))
@@ -843,7 +815,6 @@ class DetailViewController: UIViewController {
         }
     }
 }
-
 
 class LineChartView: UIView {
 

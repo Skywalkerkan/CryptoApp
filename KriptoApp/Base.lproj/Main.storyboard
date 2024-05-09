@@ -42,11 +42,11 @@
             </objects>
             <point key="canvasLocation" x="2764" y="173"/>
         </scene>
-        <!--Item-->
+        <!--Home-->
         <scene sceneID="exu-Au-SFm">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="WZj-t9-twn" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="a4R-2b-nnW">
+                    <tabBarItem key="tabBarItem" title="Home" id="a4R-2b-nnW">
                         <imageReference key="image" image="house.fill" catalog="system" renderingMode="hierarchical-single">
                             <hierarchicalColors>
                                 <color systemColor="tintColor"/>
@@ -122,16 +122,16 @@
         <image name="chart.bar.xaxis" catalog="system" width="128" height="97"/>
         <image name="house.fill" catalog="system" width="128" height="104"/>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tertiaryLabelColor">
-            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29803921570000003" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tintColor">
-            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
