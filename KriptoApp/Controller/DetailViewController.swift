@@ -49,7 +49,7 @@ class DetailViewController: UIViewController {
     
     @objc func starClicked(){
         if !isStarred{
-            starButton.setBackgroundImage(UIImage(systemName: "star.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.yellow), for: .normal)
+            starButton.setBackgroundImage(UIImage(systemName: "star.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.systemYellow), for: .normal)
             saveCoin()
         }else{
             starButton.setBackgroundImage(UIImage(systemName: "star")?.withRenderingMode(.alwaysOriginal).withTintColor(.white), for: .normal)
@@ -248,7 +248,7 @@ class DetailViewController: UIViewController {
     lazy var lineChartButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setBackgroundImage(UIImage(systemName: "chart.xyaxis.line")?.withRenderingMode(.alwaysOriginal).withTintColor(.white), for: .normal)
+        button.setBackgroundImage(UIImage(systemName: "chart.xyaxis.line")?.withRenderingMode(.alwaysOriginal).withTintColor(.gray), for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
         button.addTarget(self, action: #selector(lineChartClicked), for: .touchUpInside)
         return button
@@ -256,8 +256,11 @@ class DetailViewController: UIViewController {
     
     @objc func lineChartClicked(){
         setupLineChartView(dataValues: allValues)
+        chartLabel.text = "Line Chart"
         candleCharView.isHidden = true
         lineChartView.isHidden = false
+        candleChartButton.setBackgroundImage(UIImage(systemName: "chart.bar.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.gray), for: .normal)
+        lineChartButton.setBackgroundImage(UIImage(systemName: "chart.xyaxis.line")?.withRenderingMode(.alwaysOriginal).withTintColor(.white), for: .normal)
     }
     
     lazy var candleChartButton: UIButton = {
@@ -273,6 +276,9 @@ class DetailViewController: UIViewController {
         lineChartView.isHidden = true
         candleCharView.isHidden = false
         setupCandleChart(data: allValues)
+        candleChartButton.setBackgroundImage(UIImage(systemName: "chart.bar.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.white), for: .normal)
+        lineChartButton.setBackgroundImage(UIImage(systemName: "chart.xyaxis.line")?.withRenderingMode(.alwaysOriginal).withTintColor(.gray), for: .normal)
+        chartLabel.text = "Candle Chart"
     }
     
     let rsiLabel: UILabel = {
@@ -323,11 +329,84 @@ class DetailViewController: UIViewController {
         return stackView
     }()
     
-    let detailView: UIView = {
-       let view = UIView()
+    let detailStackView: UIStackView = {
+       let view = UIStackView()
+        view.axis = .horizontal
+        view.isHidden = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .blue
+        view.backgroundColor = UIColor(red: 30/255, green: 33/255, blue: 40/255, alpha: 0.6)
+        view.spacing = 8
         return view
+    }()
+    
+    let detailLeftStackView: UIStackView = {
+       let view = UIStackView()
+        view.axis = .vertical
+        view.spacing = 4
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let detailRightStackView: UIStackView = {
+       let view = UIStackView()
+        view.axis = .vertical
+        view.spacing = 4
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let detailHighestLabel: UILabel = {
+       let label = UILabel()
+        label.text = " Highest:"
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 14, weight: .black)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let detailLowestLabel: UILabel = {
+       let label = UILabel()
+        label.text = " Lowest:"
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 14, weight: .black)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let detailChangeLabel: UILabel = {
+       let label = UILabel()
+        label.text = " Change:"
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 14, weight: .black)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let detailHighestValueLabel: UILabel = {
+       let label = UILabel()
+        label.text = " Highest:"
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 14, weight: .black)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let detailLowestValueLabel: UILabel = {
+       let label = UILabel()
+        label.text = " Lowest:"
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 14, weight: .black)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let detailChangeValueLabel: UILabel = {
+       let label = UILabel()
+        label.text = " Change:"
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 14, weight: .black)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     override func viewDidLoad() {
@@ -347,6 +426,35 @@ class DetailViewController: UIViewController {
         setupCandleChart(data: allValues)
         setupRsiChartView()
         buttonSetup()
+        
+        
+        view.addSubview(detailStackView)
+        detailStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        detailStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        
+        detailStackView.addArrangedSubview(detailLeftStackView)
+        detailLeftStackView.addArrangedSubview(detailHighestLabel)
+        detailLeftStackView.addArrangedSubview(detailLowestLabel)
+        detailLeftStackView.addArrangedSubview(detailChangeLabel)
+        
+        detailStackView.addArrangedSubview(detailRightStackView)
+        detailRightStackView.addArrangedSubview(detailHighestValueLabel)
+        detailRightStackView.addArrangedSubview(detailLowestValueLabel)
+        detailRightStackView.addArrangedSubview(detailChangeValueLabel)
+        
+    }
+    
+    
+    override func viewDidLayoutSubviews() {
+        let halfScreenWidth = view.frame.width / 2
+        if location.x < halfScreenWidth {
+            let translationX = view.frame.width/2-detailStackView.frame.width/2-10
+            detailStackView.transform = CGAffineTransform(translationX: translationX, y: 0)
+        }
+        else {
+            let translationX = -view.frame.width/2+detailStackView.frame.width/2+10
+            detailStackView.transform = CGAffineTransform(translationX: translationX, y: 0)
+        }
     }
     
     var labelOuterLeading = UILabel()
@@ -430,19 +538,15 @@ class DetailViewController: UIViewController {
         
         return rsiValues
     }
-
-
     
     func setDetails(){
         guard let singleCoin = singleCoin else{return}
         cryptoNameLabel.text = singleCoin.symbol
-        guard let price = singleCoin.price, let priceFloat = Float(price) else { return }
-
-        let formattedPriceUsdt = String(format: "%.2f", priceFloat)
-        priceLabelUsdt.text = formattedPriceUsdt
-        let formattedPriceUsd = String(format: "%.1f", priceFloat)
-        priceLabelUsd.text = "$" + formattedPriceUsd
+        guard let price = singleCoin.price, let _ = Float(price) else { return }
         
+        priceLabelUsdt.text = price.formatPrice().firstLabel
+        priceLabelUsd.text = price.formatPrice().secondLabel
+
         guard let coinChange = singleCoin.change else{
             return
         }
@@ -461,10 +565,10 @@ class DetailViewController: UIViewController {
               let minPriceDouble = sparklineDoubles?.min() else {
             return
         }
-        let formattedHighestPrice = String(format: "%.2f", maxPriceDouble)
-        let formattedLowestPrice = String(format: "%.2f", minPriceDouble)
-        high24hValueLabel.text = formattedHighestPrice
-        low24hValueLabel.text = formattedLowestPrice
+        let formattedHighestPrice = String(format: "%.8f", maxPriceDouble)
+        let formattedLowestPrice = String(format: "%.8f", minPriceDouble)
+        high24hValueLabel.text = formattedHighestPrice.formatPrice().secondLabel
+        low24hValueLabel.text = formattedLowestPrice.formatPrice().secondLabel
         marketCapValue.text = singleCoin.marketCap?.formatVolume()
         vol24hUsdtValueLabel.text = singleCoin.the24HVolume?.formatVolume()
         
@@ -502,7 +606,6 @@ class DetailViewController: UIViewController {
     func fetchCoins() {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.viewContext
-        print("okey")
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoinData")
         guard let coinID = singleCoin?.uuid else { return }
         let predicate = NSPredicate(format: "id == %@", coinID)
@@ -514,7 +617,7 @@ class DetailViewController: UIViewController {
 
             if let _ = coins.first as? NSManagedObject {
                 isStarred = true
-                starButton.setBackgroundImage(UIImage(systemName: "star.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.yellow), for: .normal)
+                starButton.setBackgroundImage(UIImage(systemName: "star.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.systemYellow), for: .normal)
             } else {
                 isStarred = false
                 starButton.setBackgroundImage(UIImage(systemName: "star")?.withRenderingMode(.alwaysOriginal).withTintColor(.white), for: .normal)
@@ -547,10 +650,12 @@ class DetailViewController: UIViewController {
     }
     var statusBarHeight: CGFloat = 0
 
-
     func setupViews(){
+
         if #available(iOS 13.0, *) {
-            statusBarHeight = UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                statusBarHeight = windowScene.statusBarManager?.statusBarFrame.height ?? 0
+            }
         } else {
             statusBarHeight = UIApplication.shared.statusBarFrame.height
         }
@@ -688,6 +793,9 @@ class DetailViewController: UIViewController {
     }
     
     var primaryPercent: Float = 0.0
+    var percentDiffs: [Float] = []
+    var highestPrices: [Float] = []
+    var lowestPrices: [Float] = []
 
     private func setupCandleChart(data: [Float]){
 
@@ -756,6 +864,14 @@ class DetailViewController: UIViewController {
             candleView.translatesAutoresizingMaskIntoConstraints = false
             let percentDiff = (data[i + 1] - data[i]) / data[i] * 100
             
+            if data[i] > data[i+1]{
+                highestPrices.append(data[i])
+                lowestPrices.append(data[i+1])
+            }else{
+                highestPrices.append(data[i+1])
+                lowestPrices.append(data[i])
+            }
+            
             let candleWidth: CGFloat = (view.frame.size.width - 125)/37
             let position = 0.33*view.frame.size.height - (calculatePositions(data: data, viewHeight: 0.33*view.frame.size.height ).first ?? 0)
             candleCharView.addSubview(candleView)
@@ -810,10 +926,42 @@ class DetailViewController: UIViewController {
                     ])
                 }
             }
+            candleView.tag = i
+            let tapGesture = UILongPressGestureRecognizer(target: self, action: #selector(candleTapped(_:)))
+            tapGesture.minimumPressDuration = 0.3
+            candleView.addGestureRecognizer(tapGesture)
             primaryPercent = percentDiff
+            percentDiffs.append(percentDiff)
             primaryView = candleView
         }
     }
+    
+    var location = CGPoint()
+
+    @objc func candleTapped(_ sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            
+            guard let tag = sender.view?.tag else { return }
+            detailHighestValueLabel.text = String(highestPrices[tag])
+            detailLowestValueLabel.text = String(lowestPrices[tag])
+            let change = highestPrices[tag] - lowestPrices[tag]
+            let formattedPercent = "(" + String(format: "%.2f", percentDiffs[tag]) + "%)"
+
+            if percentDiffs[tag] < 0.0{
+                detailChangeValueLabel.textColor = AppColors.red
+                detailChangeValueLabel.text = "-" + String(format: "%.2f", change) + formattedPercent
+            }else{
+                detailChangeValueLabel.textColor = AppColors.green
+                detailChangeValueLabel.text = "+" + String(format: "%.2f", change) + formattedPercent
+            }
+            location = sender.location(in: view)
+            detailStackView.isHidden = false
+            
+        }else if sender.state == .ended{
+            detailStackView.isHidden = true
+        }
+    }
+    
 }
 
 class LineChartView: UIView {

@@ -56,6 +56,16 @@ class HeaderReusableView: UICollectionReusableView {
         return label
     }()
     
+    let depositButton: UIButton = {
+       let button = UIButton()
+        button.setTitle("Deposit", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = .systemYellow
+        button.layer.cornerRadius = 8
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     let totalBalanceLabelUsd: UILabel = {
        let label = UILabel()
         label.text = "≈ 21,135.9 $"
@@ -131,6 +141,12 @@ class HeaderReusableView: UICollectionReusableView {
         headerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         headerView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
+        headerView.addSubview(depositButton)
+        depositButton.topAnchor.constraint(equalTo: topAnchor, constant: 24).isActive = true
+        depositButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        depositButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        depositButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16).isActive = true
+        
         headerView.addSubview(balanceStackView)
         balanceStackView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 0).isActive = true
         balanceStackView.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16).isActive = true
@@ -190,7 +206,6 @@ extension HeaderReusableView: UICollectionViewDataSource, UICollectionViewDelega
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(categories[indexPath.row])
         let chosenCategory = categories[indexPath.row]
         NotificationCenter.default.post(name: Notification.Name("CustomNotification"), object: chosenCategory)
         

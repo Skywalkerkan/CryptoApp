@@ -22,7 +22,7 @@ class CategoryCell: UICollectionViewCell {
     let bottomLine: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .yellow
+        view.backgroundColor = .systemYellow
         view.isHidden = true
         return view
     }()

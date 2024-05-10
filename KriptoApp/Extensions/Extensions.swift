@@ -32,3 +32,37 @@ extension String {
     }
 }
 
+extension String {
+    func formatPrice() -> (firstLabel: String, secondLabel: String) {
+        var firstPrice = ""
+        var secondPrice = ""
+        
+        if let dotRange = self.range(of: ".") {
+            let fractionPart = self[dotRange.upperBound...]
+            let fractionDigits = Array(fractionPart)
+            var count = 0
+            for digit in fractionDigits {
+                if digit != "0" {
+                    break
+                }
+                count += 1
+            }
+            
+            let priceFloat = (self as NSString).floatValue
+            
+            if count > 2 {
+                firstPrice = String(format: "%.\(count + 3)f", priceFloat)
+                secondPrice = String(format: "%.\(count + 2)f", priceFloat) + " $"
+            } else {
+                firstPrice = String(format: "%.3f", priceFloat)
+                secondPrice = String(format: "%.2f", priceFloat) + " $"
+            }
+        }
+        
+        return (firstPrice, secondPrice)
+    }
+}
+
+
+
+

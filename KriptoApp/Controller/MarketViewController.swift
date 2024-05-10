@@ -311,7 +311,6 @@ class MarketViewController: UIViewController {
         var coins = result.data.coins
        
         if activeSort != "Name" && activeSort != ""{
-            print("geçildi")
             if let image = lastImageView.image {
                 lastImageView.image = image.withRenderingMode(.alwaysTemplate)
                 lastImageView.tintColor = UIColor.gray
@@ -360,7 +359,6 @@ class MarketViewController: UIViewController {
         var coins = result.data.coins
         
         if activeSort != "Vol" && activeSort != ""{
-            print("geçildi")
             if let image = lastImageView.image {
                 lastImageView.image = image.withRenderingMode(.alwaysTemplate)
                 lastImageView.tintColor = UIColor.gray
@@ -411,7 +409,6 @@ class MarketViewController: UIViewController {
         var coins = result.data.coins
         
         if activeSort != "Price" && activeSort != ""{
-            print("geçildi")
             if let image = lastImageView.image {
                 lastImageView.image = image.withRenderingMode(.alwaysTemplate)
                 lastImageView.tintColor = UIColor.gray
@@ -460,7 +457,6 @@ class MarketViewController: UIViewController {
         var coins = result.data.coins
         
         if activeSort != "Change" && activeSort != ""{
-            print("geçildi")
             if let image = lastImageView.image {
                 lastImageView.image = image.withRenderingMode(.alwaysTemplate)
                 lastImageView.tintColor = UIColor.gray

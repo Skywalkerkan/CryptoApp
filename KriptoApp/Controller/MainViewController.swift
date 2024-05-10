@@ -20,16 +20,47 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
           }
         searchBar.searchTextField.leftView?.tintColor = .gray
         searchBar.layer.zPosition = 2
-        print("güncelleniyor")
         return searchBar
     }()
     
+    let imagesStackView: UIStackView = {
+       let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 16
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    let bellImageView: UIImageView = {
+       let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "bell.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.white)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    let infoImageView: UIImageView = {
+       let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "info.circle.fill")?.withRenderingMode(.alwaysOriginal).withTintColor(.white)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    let qrImageView: UIImageView = {
+       let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "qrcode.viewfinder")?.withRenderingMode(.alwaysOriginal).withTintColor(.white)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+        
     let binanceImageView: UIImageView = {
        let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "binance")
         return imageView
     }()
+    
+    
     
     var collectionViewCrypto: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -132,7 +163,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
                 DispatchQueue.main.async {
                     self.isFavActive = true
                     self.sortCryptos(cryptoResult: cryptoResult, category: .Favorites)
-                   // self.collectionViewCrypto.reloadData()
                     if self.favCryptos.isEmpty{
                         self.noDataImage.isHidden = false
                         self.noDataLabel.isHidden = false
@@ -150,17 +180,14 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
         
     }
     
-    
     @objc func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
            if gesture.state == .began {
                let touchPoint = gesture.location(in: collectionViewCrypto)
                if let indexPath = collectionViewCrypto.indexPathForItem(at: touchPoint),
                   let cell = collectionViewCrypto.cellForItem(at: indexPath){
-                   
                  
                    let cellFrameInSuperview = collectionViewCrypto.convert(cell.frame, to: self.view)
                    if isFavActive{
-                       print("Uzun basıldı! Hücre indeksi: \(indexPath.item)")
                        guard let id = favCryptos[indexPath.row].uuid else{return}
                        selectedId = id
                        deleteButton.isHidden = false
@@ -173,7 +200,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
                                 cell.backgroundColor = .clear
                             }
                             }
-                       
                    }
                    
                }
@@ -238,9 +264,11 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
     private func viewsSetup(){
         
         if #available(iOS 13.0, *) {
-            statusBarHeight = UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                statusBarHeight = windowScene.statusBarManager?.statusBarFrame.height ?? 0
+            }
         } else {
-                statusBarHeight = UIApplication.shared.statusBarFrame.height
+            statusBarHeight = UIApplication.shared.statusBarFrame.height
         }
         
         view.backgroundColor = UIColor(red: 38/255, green: 41/255, blue: 48/255, alpha: 1)
@@ -256,8 +284,16 @@ class MainViewController: UIViewController, UIScrollViewDelegate{
         view.addSubview(searchBar)
         searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -4).isActive = true
         searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 48).isActive = true
-        searchBar.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        searchBar.widthAnchor.constraint(equalToConstant: 0.55*view.frame.size.width).isActive = true
         searchBar.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        
+        view.addSubview(imagesStackView)
+        imagesStackView.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor).isActive = true
+        imagesStackView.leadingAnchor.constraint(equalTo: searchBar.trailingAnchor, constant: 16).isActive = true
+        imagesStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+        imagesStackView.addArrangedSubview(qrImageView)
+        imagesStackView.addArrangedSubview(bellImageView)
+        imagesStackView.addArrangedSubview(infoImageView)
         
         view.addSubview(binanceImageView)
         binanceImageView.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor).isActive = true
@@ -494,7 +530,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
 extension MainViewController: UISearchBarDelegate {
   
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        print("Açıldı")
         
         let destinationVC = SearchViewController()
         destinationVC.cryptoResult = cryptoResult

@@ -8,7 +8,6 @@
 import Foundation
 import Alamofire
 
-
 final class NetworkService{
     
     static let shared: NetworkService = {
@@ -18,13 +17,12 @@ final class NetworkService{
     
     private init() {}
     
-    
     func cryptoRequest<T: Decodable>(request: URLRequestConvertible,
                                      decodeType type: T.Type,
                                      completion: @escaping (Result<T, Error>) -> Void){
         
         AF.request(request).responseData { [weak self] response in
-            guard let self else{return}
+            guard let strongSelf = self else{return}
     
             switch response.result{
             case .success(let data):

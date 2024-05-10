@@ -54,9 +54,7 @@ class SearchViewController: UIViewController {
     }()
     
     @objc func cancelClicked() {
-        // Animasyon
         self.searchBar.resignFirstResponder()
-        
         navigationController?.popViewController(animated: true)
     }
     
@@ -84,24 +82,8 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
         animateSearchBar()
         setupCollectionView()
-     
-      /*  CryptoLogic.shared.getAllCryptos { [weak self] result in
-            guard let self else{return}
-            
-            switch result{
-            case .success(let cryptoResult):
-                self.cryptoResult = cryptoResult
-                self.searchResult = cryptoResult
-                DispatchQueue.main.async {
-                    self.searchCollectionView.reloadData()
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }*/
         
         searchResult = cryptoResult
         self.searchCollectionView.reloadData()
@@ -114,22 +96,25 @@ class SearchViewController: UIViewController {
     }
     
     func animateSearchBar(){
+
         if #available(iOS 13.0, *) {
-            statusBarHeight = UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                statusBarHeight = windowScene.statusBarManager?.statusBarFrame.height ?? 0
+            }
         } else {
-                statusBarHeight = UIApplication.shared.statusBarFrame.height
+            statusBarHeight = UIApplication.shared.statusBarFrame.height
         }
         
         view.backgroundColor = UIColor(red: 38/255, green: 41/255, blue: 48/255, alpha: 1)
         setupViews()
         
         UIView.animate(withDuration: 0.2, animations: {
-            self.searchBar.frame = CGRect(x: 8, y: self.statusBarHeight+10, width: 200, height: 60)
+            self.searchBar.frame = CGRect(x: 8, y: self.statusBarHeight+10, width: 0.55*self.view.frame.size.width, height: 60)
         }) { _ in
             self.searchBar.becomeFirstResponder()
 
             UIView.animate(withDuration: 0.2, animations: {
-                self.searchBar.frame = CGRect(x: 8, y: self.statusBarHeight+10, width: 300, height: 60)
+                self.searchBar.frame = CGRect(x: 8, y: self.statusBarHeight+10, width: 0.78*self.view.frame.size.width, height: 60)
             }){ _ in
             }
         }
@@ -195,7 +180,6 @@ extension SearchViewController: UISearchBarDelegate {
         let trimmedSearchText = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
         
         if trimmedSearchText.isEmpty {
-            // Arama metni boşsa, tüm kripto paraları göster
             searchResult = cryptoResult
             noDataLabel.isHidden = true
             noDataImage.isHidden = true
@@ -204,16 +188,12 @@ extension SearchViewController: UISearchBarDelegate {
                 return
             }
             
-            // Filtreleme işlemi
             let filteredCoins = coins.filter { coin in
                 if let name = coin.symbol {
-                    print(name)
                     return name.localizedCaseInsensitiveContains(trimmedSearchText)
                 }
                 return false
             }
-            
-            // Filtrelenmiş sonuçları güncelle
             
             if filteredCoins.isEmpty{
                 noDataLabel.isHidden = false
