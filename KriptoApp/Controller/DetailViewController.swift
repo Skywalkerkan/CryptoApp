@@ -409,6 +409,14 @@ class DetailViewController: UIViewController {
         return label
     }()
     
+    let heightView: UIView = {
+       let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .lightGray
+        view.isHidden = true
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -442,8 +450,15 @@ class DetailViewController: UIViewController {
         detailRightStackView.addArrangedSubview(detailLowestValueLabel)
         detailRightStackView.addArrangedSubview(detailChangeValueLabel)
         
+        view.addSubview(heightView)
+        heightView.topAnchor.constraint(equalTo: chartLabel.bottomAnchor, constant: 4).isActive = true
+        heightView.bottomAnchor.constraint(equalTo: rsiLabel.topAnchor, constant: -4).isActive = true
+        heightView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        heightView.widthAnchor.constraint(equalToConstant: 2).isActive = true
+
     }
     
+    var translationXHeight = 0.0
     
     override func viewDidLayoutSubviews() {
         let halfScreenWidth = view.frame.width / 2
@@ -455,6 +470,11 @@ class DetailViewController: UIViewController {
             let translationX = -view.frame.width/2+detailStackView.frame.width/2+10
             detailStackView.transform = CGAffineTransform(translationX: translationX, y: 0)
         }
+        
+        let centerX = translationXHeight
+        heightView.center.x = centerX
+           
+        
     }
     
     var labelOuterLeading = UILabel()
@@ -937,7 +957,9 @@ class DetailViewController: UIViewController {
     }
     
     var location = CGPoint()
-
+    
+    
+    
     @objc func candleTapped(_ sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
             
@@ -946,6 +968,10 @@ class DetailViewController: UIViewController {
             detailLowestValueLabel.text = String(lowestPrices[tag])
             let change = highestPrices[tag] - lowestPrices[tag]
             let formattedPercent = "(" + String(format: "%.2f", percentDiffs[tag]) + "%)"
+            
+            let translationX = sender.view?.center.x
+            translationXHeight = translationX ?? 0
+            heightView.isHidden = false
 
             if percentDiffs[tag] < 0.0{
                 detailChangeValueLabel.textColor = AppColors.red
@@ -958,6 +984,16 @@ class DetailViewController: UIViewController {
             detailStackView.isHidden = false
             
         }else if sender.state == .ended{
+            
+            guard let tag = sender.view?.tag else { return }
+            if percentDiffs[tag] > 0{
+                sender.view?.backgroundColor = AppColors.green
+                
+            }else{
+                sender.view?.backgroundColor = AppColors.red
+            }
+            heightView.isHidden = true
+            
             detailStackView.isHidden = true
         }
     }
