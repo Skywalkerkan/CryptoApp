@@ -1,4 +1,3 @@
-
 <div align="center">
   <h1>KriptoApp - Turkcell 2nd HW by Erkan Coşar</h1>
 </div>
@@ -23,17 +22,19 @@ This app is a binance clone. In short, it is a crypto exchange application.
 - Enjoy your time with the charts created without your library.
 - Data is saved locally with the help of Coredata.
 
+
  ## Screenshots
 
 | Image 1                | Image 2                | Image 3                |
 |------------------------|------------------------|------------------------|
-| ![Simulator Screenshot - iPhone 15 Pro - 2024-05-10 at 15 03 29](https://github.com/Skywalkerkan/MovieApp/assets/117943189/a1f0e388-d53a-489e-808e-518b6074dca9) | ![Simulator Screenshot - iPhone 15 Pro - 2024-05-10 at 15 03 41](https://github.com/Skywalkerkan/MovieApp/assets/117943189/c9364092-f351-4fa1-adf9-e13935b91abd)| ![Simulator Screenshot - iPhone 15 Pro - 2024-05-10 at 15 03 47](https://github.com/Skywalkerkan/MovieApp/assets/117943189/4acb9cfc-0351-4c1d-9ef3-d5dc1a04b48a)
+| ![Simulator Screenshot - iPhone 15 Pro - 2024-05-10 at 15 03 29](https://github.com/user-attachments/assets/67d80056-fbda-4e16-b1ea-8f75dc248c5d) | ![Simulator Screenshot - iPhone 15 Pro - 2024-05-10 at 15 03 41](https://github.com/user-attachments/assets/21215429-d9c8-46dc-9972-18a33462d998)| ![Simulator Screenshot - iPhone 15 Pro - 2024-05-10 at 15 03 47](https://github.com/user-attachments/assets/bc4b8dde-29c4-43d7-9be5-790f51bba75f)
  |
 
 | Image 4                | Image 5                | Image 6                |
 |------------------------|------------------------|------------------------|
-| ![Simulator Screenshot - iPhone 15 Pro - 2024-05-10 at 15 28 37](https://github.com/Skywalkerkan/MovieApp/assets/117943189/41364ae0-1c37-433b-ac24-50c73a06d95c) | ![Simulator Screenshot - iPhone 15 Pro - 2024-05-10 at 15 04 06](https://github.com/Skywalkerkan/MovieApp/assets/117943189/37c580a2-7873-4016-8ea6-c0e5d5b0604b)| ![Simulator Screenshot - iPhone 15 Pro - 2024-05-10 at 15 04 14](https://github.com/Skywalkerkan/MovieApp/assets/117943189/88ee3c4d-9b0d-4add-b241-76df95e728e2)
+| ![Simulator Screenshot - iPhone 15 Pro - 2024-05-10 at 15 28 37](https://github.com/user-attachments/assets/dfc4bf0f-7201-4b9b-bcc8-c544194bec59) | ![Simulator Screenshot - iPhone 15 Pro - 2024-05-10 at 15 04 06](https://github.com/user-attachments/assets/0bcc926a-c5f1-4207-b46c-0db0b56f154c)| ![Simulator Screenshot - iPhone 15 Pro - 2024-05-10 at 15 04 14](https://github.com/user-attachments/assets/7995c4a6-0e93-4231-842c-2e20198acaf7)
  |
+
 
 ## Tech Stack
 
